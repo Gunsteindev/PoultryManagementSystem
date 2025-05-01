@@ -1,10 +1,14 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { PencilOff, Trash2, Printer } from 'lucide-react';
 import DeleteDialog from '../dialog/DeleteDialog';
 import EggSaleForm from '../form/EggSaleForm';
 import { usePage } from '@inertiajs/react';
+import { useTranslation } from "react-i18next";
+  import DynamicTableComponent from './DynamicTableComponent';
 
+
+  
 
 export interface EggSaleProp {
     eggsale_id: number;
@@ -17,6 +21,21 @@ export interface EggSaleProp {
     eggsale_total_cost: string;         
     eggsale_unit_price: string;         
 }
+
+interface DataRow {
+    id: number;
+    saleCode: string;
+    description: string;
+    quantity: string;
+    unitPrice: string;
+    reduction: string;
+    totalPrice: string;
+    customer: string;
+    date: string;
+    item: EggSaleProp;
+    // update: () => void;
+    // delete: () => void;
+  }
 
 export interface EggSaleResponse {
     data: EggSaleProp[];
@@ -39,6 +58,8 @@ const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
         currentPage * itemsPerPage
     ) || [];
 
+    const { t, i18n } = useTranslation();
+
     const [editForm, setEditForm] = useState(false);
     const [deleteDlg, setDeleteDlg] = useState(false);
     const [selectedItem, setSelectedItem] = useState<EggSaleProp | null>(null);
@@ -60,24 +81,105 @@ const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
     const handlePageChange = (pageNumber: number) => setCurrentPage(pageNumber);
 
     if (!eggsaleData?.length) {
-        return <p className="text-center py-4">No Egg Sale data available.</p>;
+        return <p className="text-center py-4">{t("egg_noDataAvailable")}</p>;
     }
 
 
 
+    // ***********************************************
+    const columns = [
+        { header: t("egg_tableHeader_eggsale_saleCode"), accessor: 'saleCode' },
+        { header: t("egg_tableHeader_eggsale_description"), accessor: 'description' },
+        { header: t("egg_tableHeader_eggsale_quantity"), accessor: 'quantity' },
+        { header: t("egg_tableHeader_eggsale_unitPrice"), accessor: 'unitPrice' },
+        { header: t("egg_tableHeader_eggsale_reduction"), accessor: 'reduction' },
+        { header: t("egg_tableHeader_eggsale_totalPrice"), accessor: 'totalPrice' },
+        { header: t("egg_tableHeader_eggsale_customer"), accessor: 'customer' },
+        { header: t("egg_tableHeader_eggsale_date"), accessor: 'date' },
+      ];
+    
+    
+
+    const data: DataRow[] = [
+      // Example data rows can be added here if needed
+    ];
+
+    eggsaleData.map((item: any) =>{
+        data.push({
+            id: item.eggsale_id,
+            saleCode: item.eggsale_code,
+            description: item.eggsale_description,
+            quantity: item.eggsale_quantity,
+            unitPrice: item.eggsale_unit_price,
+            reduction: item.eggsale_reduction,
+            totalPrice: item.eggsale_total_cost,
+            customer: item.eggsale_client_name,
+            date: item.eggsale_date,
+            item: item
+            // update: () => toggleShowForm(true, item.item),
+            // delete: () => toggleDeleteDlg(true, item),
+        });
+      });
+
+      const handleUpdate = (row: Record<string, any>) => {
+        console.log('Update row:', row);
+        data.forEach((item) => {
+        
+          if (item.id === row.id) {
+            item.saleCode = row.saleCode;
+            item.description = row.description;
+            item.quantity = row.quantity;
+            item.unitPrice = row.unitPrice;
+            item.reduction = row.reduction;
+            item.totalPrice = row.totalPrice;
+            item.customer = row.customer;
+            item.date = row.date;
+
+            toggleShowForm(true, item.item);
+          }
+        }
+      )};
+    
+      const handleDelete = (row: Record<string, any>) => {
+        console.log('Delete row:', row);
+        data.forEach((item) => {
+        
+            if (item.id === row.id) {
+              item.saleCode = row.saleCode;
+              item.description = row.description;
+              item.quantity = row.quantity;
+              item.unitPrice = row.unitPrice;
+              item.reduction = row.reduction;
+              item.totalPrice = row.totalPrice;
+              item.customer = row.customer;
+              item.date = row.date;
+  
+              toggleDeleteDlg(true, item.item);
+            }
+          }
+      )};
+
+
     return (
         <div style={{ padding: '0px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }} className='bg-white dark:bg-slate-800'>
+            <DynamicTableComponent
+                columns={columns}
+                data={data}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+            />
+
+            {/* <table style={{ width: '100%', borderCollapse: 'collapse' }} className='bg-white dark:bg-slate-800'>
                 <thead>
                     <tr>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Code Vente</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Description</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Quantite</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Prix unitaire</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Reduction</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Prix Total</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Client</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Date</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_eggsale_saleCode")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_eggsale_description")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_eggsale_quantity")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_eggsale_unitPrice")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_eggsale_reduction")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_eggsale_totalPrice")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_eggsale_customer")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_eggsale_date")}</th>
                         <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Actions</th>
                     </tr>
                 </thead>
@@ -122,8 +224,8 @@ const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
                         </tr>
                     ))}
                 </tbody>
-            </table>
-            <div style={{ padding: '5px', display: 'flex', justifyContent: 'center' }}>
+            </table> */}
+            {/* <div style={{ padding: '5px', display: 'flex', justifyContent: 'center' }}>
                 {[...Array(totalPages).keys()].map((pageNumber) => (
                     <button
                         key={pageNumber}
@@ -141,7 +243,7 @@ const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
                         {pageNumber + 1}
                     </button>
                 ))}
-            </div>
+            </div> */}
             {editForm && (
                 <EggSaleForm
                     title={title.current}

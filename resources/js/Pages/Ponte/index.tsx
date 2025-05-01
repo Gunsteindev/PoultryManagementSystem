@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, BadgeDollarSign } from 'lucide-react';
 import { ReactNode } from 'react';
 import ProductForm from '@/Pages/form/ProductForm';
@@ -13,6 +13,7 @@ import { useEggSaleStore } from '@/lib/Stores/eggSaleStore';
 import { usePickupStore } from '@/lib/Stores/pickupStore';
 import { usePage } from '@inertiajs/react';
 import { totalCratesData } from '@/lib/utils';
+import { useTranslation } from "react-i18next";
 
 
 const Ponte = () => {
@@ -132,16 +133,22 @@ const Ponte = () => {
     
     const totalNumberOfEggsRemain = totalQuantityEggsRemain % eggsInCrate;
 
+    const { t, i18n } = useTranslation();
+
+    useEffect(() => {
+        console.log("Current language:", i18n.language);
+        console.log("Loaded translations:", i18n.options.backend && typeof i18n.options.backend === 'object' && 'loadPath' in i18n.options.backend ? i18n.options.backend.loadPath : "Backend options not available");
+    }, []);
     
     return (
         <div className="w-full p-10 mx-auto space-y-8">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-semibold">Ponte</h1>
+                <h1 className="text-2xl font-semibold">{t("egg")}</h1>
             </div>
             <div className='grid grid-cols-3 gap-4'>
                 <Card className="dark:bg-slate-800 border shadow-none">
                     <CardHeader>
-                        <CardTitle className="text-orange-600">Total Eggs</CardTitle>
+                        <CardTitle className="text-orange-600">{t("egg_totalEgg")}</CardTitle>
                         <CardDescription>
                             <div className=''>
                                 <span className='text-xl font-bold'>{totalQuantityEggsRemain}</span>
@@ -151,7 +158,7 @@ const Ponte = () => {
                 </Card>
                 <Card className="dark:bg-slate-800 border shadow-none">
                     <CardHeader>
-                        <CardTitle className="text-orange-600">Total Crates in Stock</CardTitle>
+                        <CardTitle className="text-orange-600">{t("egg_totalCrateInStock")}</CardTitle>
                         <CardDescription>
                             <div className=''>
                                 <span className='text-xl font-bold'>{totalCrateQuantityRemain}</span>
@@ -161,7 +168,7 @@ const Ponte = () => {
                 </Card>
                 <Card className="dark:bg-slate-800 border shadow-none">
                     <CardHeader>
-                        <CardTitle className="text-orange-600">Eggs remaining</CardTitle>
+                        <CardTitle className="text-orange-600">{t("egg_totalEggRemaining")}</CardTitle>
                         <CardDescription>
                             <div className=''>
                                 <span className='text-xl font-bold'>{totalNumberOfEggsRemain}</span>
@@ -180,7 +187,7 @@ const Ponte = () => {
                                 }`}
                                 onClick={() => handleTabClick('tab1')}
                             >
-                                Transaction
+                                {t("egg_transaction")}
                             </button>
                         </>
                     )}
@@ -193,7 +200,7 @@ const Ponte = () => {
                                 }`}
                                 onClick={() => handleTabClick('tab2')}
                             >
-                                Ramassage
+                                {t("egg_pickup")}
                             </button>
                         </>
                     )}
@@ -212,14 +219,14 @@ const Ponte = () => {
                                             onClick={handleCustomerDialogToggle}
                                         >
                                             <Plus size={20} />
-                                            <span>Nouveau Client</span>
+                                            <span>{t("egg_customer")}</span>
                                         </button>
                                         <button
                                             className="flex items-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border"
                                             onClick={handleDialogToggle}
                                         >
                                             <Plus size={20} />
-                                            <span>Nouveau Vente</span>
+                                            <span>{t("egg_sale")}</span>
                                         </button>
                                     </>
                                 )}
@@ -228,7 +235,7 @@ const Ponte = () => {
                             <div className="space-y-5">
                                 <div className="flex space-x-2 dark:text-gray-400">
                                     <BadgeDollarSign />
-                                    <span>Transactions Récentes</span>
+                                    <span>{t("egg_recentTransaction")}</span>
                                 </div>
                                 <EggSaleTable eggsaleData={eggSales} />
                             </div>
@@ -239,7 +246,7 @@ const Ponte = () => {
                             <div className="grid grid-cols-3 gap-4">
                                 <Card className="dark:bg-slate-800 border shadow-none">
                                     <CardHeader>
-                                        <CardTitle className="text-orange-600">Ramassage 09H</CardTitle>
+                                        <CardTitle className="text-orange-600">{t("egg_firstPickup")}</CardTitle>
                                         <CardDescription>
                                             <div className=''>
                                                 <span className=''>{ramassage9H}</span>
@@ -249,7 +256,7 @@ const Ponte = () => {
                                 </Card>
                                 <Card className="dark:bg-slate-800 border shadow-none">
                                     <CardHeader>
-                                        <CardTitle className="text-orange-600">Ramassage 11H</CardTitle>
+                                        <CardTitle className="text-orange-600">{t("egg_secondPickup")}</CardTitle>
                                         <CardDescription>
                                             <div className=''>
                                                 <span className=''>{ramassage11H}</span>
@@ -259,7 +266,7 @@ const Ponte = () => {
                                 </Card>
                                 <Card className="dark:bg-slate-800 border shadow-none">
                                     <CardHeader>
-                                        <CardTitle className="text-orange-600">Ramassage 16H</CardTitle>
+                                        <CardTitle className="text-orange-600">{t("egg_thirdPickup")}</CardTitle>
                                         <CardDescription>
                                             <div className=''>
                                                 <span className=''>{ramassage16H}</span>
@@ -269,7 +276,7 @@ const Ponte = () => {
                                 </Card>
                             </div>
                             <div className="flex justify-between items-center">
-                                <h1>Ramassage du jour {formattedDate} [Total: {ramassage9H + ramassage11H + ramassage16H}] = {totalDailyNumberOfCrate} Plateaux {totalDailyNumberOfEggsRemain} Oeuf(s)</h1>
+                                <h1>{t("egg_dailyPickup")} ( {formattedDate} ) [Total: {ramassage9H + ramassage11H + ramassage16H}] = {totalDailyNumberOfCrate} Plateaux {totalDailyNumberOfEggsRemain} Oeuf(s)</h1>
                                 {(roles === 'Admin' || 'Production') && (
                                     <>
                                         <button
@@ -277,7 +284,7 @@ const Ponte = () => {
                                             onClick={handlePickupDialogToggle}
                                         >
                                             <Plus size={20} />
-                                            <span>Nouveau Ramassage</span>
+                                            <span>{t("egg_newPickup")}</span>
                                         </button>
                                         {showPickupDlg && <ProductForm showDlg={showPickupDlg} toggleDlg={toggleShowPickupDlg} />}
                                     </>

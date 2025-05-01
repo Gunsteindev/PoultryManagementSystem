@@ -11,6 +11,9 @@ import axios from "axios";
 import { PickupProp } from "../table/PickupTable";
 import { usePickupStore } from "@/lib/Stores/pickupStore";
 import { useBatimentStore } from "@/lib/Stores/batimentStore";
+import { useTranslation } from "react-i18next";
+
+
 
 interface FormData {
     pickup_batiment: string,
@@ -35,9 +38,12 @@ interface ProductFormProp {
 const ProductForm = ({ showDlg, toggleDlg, title, selectedData}: ProductFormProp) => {
     const user = usePage().props.auth.user;
     const { toast } = useToast();
+
+    const { t, i18n } = useTranslation();
+
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const isEditMode = !!selectedData; // Determine mode based on selectedData presence
-    const formTitle = title || (isEditMode ? "UPDATE RAMASSAGE" : "NOUVEAU RAMASSAGE");
+    const formTitle = title || (isEditMode ? t("egg_form_pickup_updatePickup") : t("egg_newPickup"));
     const { addPickup, updatePickup } = usePickupStore();
     const { batiments } = useBatimentStore();
 
@@ -130,7 +136,7 @@ const ProductForm = ({ showDlg, toggleDlg, title, selectedData}: ProductFormProp
                         <FormComponent
                             name="pickup_code"
                             fieldType={FormFieldType.SELECT}
-                            label="Pickup Code"
+                            label={t("egg_form_pickup_pickupCode")}
                             placeholder=""
                             value={data.pickup_code}
                             onChange={(e) => setData("pickup_code", e.target.value)}
@@ -155,7 +161,7 @@ const ProductForm = ({ showDlg, toggleDlg, title, selectedData}: ProductFormProp
                         <FormComponent
                             name="pickup_batiment"
                             fieldType={FormFieldType.SELECT}
-                            label="Compartiment"
+                            label={t("egg_form_pickup_roomCode")}
                             placeholder=""
                             value={data.pickup_batiment}
                             onChange={(e) => setData("pickup_batiment", e.target.value)}
@@ -172,7 +178,7 @@ const ProductForm = ({ showDlg, toggleDlg, title, selectedData}: ProductFormProp
                         <FormComponent
                             name="pickup_crate_quantity"
                             fieldType={FormFieldType.NUMBER}
-                            label="Quantite Plateau (x)"
+                            label={t("egg_form_pickup_numberOfCrate")}
                             placeholder=""
                             value={data.pickup_crate_quantity}
                             onChange={(e) => setData("pickup_crate_quantity", e.target.value)}
@@ -181,7 +187,7 @@ const ProductForm = ({ showDlg, toggleDlg, title, selectedData}: ProductFormProp
                         <FormComponent
                             name="pickup_quantity_remain"
                             fieldType={FormFieldType.NUMBER}
-                            label="Oeuf Restant"
+                            label={t("egg_form_pickup_eggRemained")}
                             placeholder=""
                             value={data.pickup_quantity_remain}
                             onChange={(e) => setData("pickup_quantity_remain", e.target.value)}
@@ -190,7 +196,7 @@ const ProductForm = ({ showDlg, toggleDlg, title, selectedData}: ProductFormProp
                         <FormComponent
                             name="pickup_quantity_loss"
                             fieldType={FormFieldType.NUMBER}
-                            label="Perte"
+                            label={t("egg_form_pickup_loss")}
                             placeholder=""
                             value={data.pickup_quantity_loss}
                             onChange={(e) => setData("pickup_quantity_loss", e.target.value)}
@@ -199,7 +205,7 @@ const ProductForm = ({ showDlg, toggleDlg, title, selectedData}: ProductFormProp
                         <FormComponent
                             name="pickup_total_quantity"
                             fieldType={FormFieldType.NUMBER}
-                            label="Quantite Total"
+                            label={t("egg_form_pickup_totalNumberofEggs")}
                             placeholder=""
                             value={data.pickup_total_quantity = Number(data.pickup_crate_quantity) * 30 + Number(data.pickup_quantity_remain)}
                             onChange={(e) => setData("pickup_total_quantity", e.target.value)}
@@ -208,7 +214,7 @@ const ProductForm = ({ showDlg, toggleDlg, title, selectedData}: ProductFormProp
                         <FormComponent
                             name="pickup_date"
                             fieldType={FormFieldType.INPUT}
-                            label="Date"
+                            label={t("egg_form_pickup_date")}
                             placeholder=""
                             value={typeof data.pickup_date === 'string' ? data.pickup_date : (data.pickup_date as Date).toISOString().split('T')[0]}
                             onChange={(e) => setData("pickup_date", e.target.value)}

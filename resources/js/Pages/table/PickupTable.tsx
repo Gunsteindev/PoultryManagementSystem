@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { PencilOff, Trash2 } from 'lucide-react';
 import DeleteDialog from '../dialog/DeleteDialog';
 import ProductForm from '../form/ProductForm';
-
+import { useTranslation } from "react-i18next";
 
 export interface PickupProp {
     pickup_id: number;
@@ -36,6 +36,8 @@ const PickupTable = ({ pickupData }: PickupTableProp) => {
         currentPage * itemsPerPage
     ) || [];
 
+    const { t, i18n } = useTranslation();
+
     const [editForm, setEditForm] = useState(false);
     const [deleteDlg, setDeleteDlg] = useState(false);
     const [selectedItem, setSelectedItem] = useState<PickupProp | null>(null);
@@ -55,7 +57,7 @@ const PickupTable = ({ pickupData }: PickupTableProp) => {
     const handlePageChange = (pageNumber: number) => setCurrentPage(pageNumber);
 
     if (!pickupData?.length) {
-        return <p className="text-center py-4">No Ramassage data available.</p>;
+        return <p className="text-center py-4">{t("egg_noDataAvailable")}</p>;
     }
 
     return (
@@ -63,13 +65,13 @@ const PickupTable = ({ pickupData }: PickupTableProp) => {
             <table style={{ width: '100%', borderCollapse: 'collapse' }} className='bg-white dark:bg-slate-800'>
                 <thead>
                     <tr>
-                    <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Code Ramassage</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-md'>Code Batiment</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Quantite Plateau</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Perte</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Oeuf Restant</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Quantite Total</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Date</th>
+                    <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_pickupCode")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-md'>{t("egg_tableHeader_pickup_roomCode")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_numberOfCrate")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_loss")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_eggRemained")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_totalNumberofEggs")}</th>
+                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_date")}</th>
                         <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Actions</th>
                     </tr>
                 </thead>

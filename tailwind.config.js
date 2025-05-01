@@ -17,7 +17,8 @@ export default {
     			sans: ['Figtree', ...defaultTheme.fontFamily.sans],
     			montserrat: 'Montserrat',
     			poppins: 'Poppins',
-				nunito: 'Nunito'
+				nunito: 'Nunito',
+				lexend: 'Lexend',
     		},
     		borderRadius: {
     			lg: 'var(--radius)',

@@ -11,6 +11,7 @@ import axios from "axios"
 import { EggSaleProp } from "../table/EggSaleTable";
 import { useClientStore } from "@/lib/Stores/customerStore";
 import { useEggSaleStore } from "@/lib/Stores/eggSaleStore";
+import { useTranslation } from "react-i18next";
 
 interface FormData {
     eggsale_code: string,
@@ -35,9 +36,12 @@ interface EggSaleFormProp {
 const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp) => {
     const user = usePage().props.auth.user;
     const { toast } = useToast();
+
+    const { t, i18n } = useTranslation();
+    
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const isEditMode = !!selectedData; // Determine mode based on selectedData presence
-    const formTitle = title || (isEditMode ? "UPDATE VENTE" : "NOUVEAU VENTE");
+    const formTitle = title || (isEditMode ? t("egg_form_eggsale_updateSale") : t("egg_sale"));
     const { addEggSale, updateEggSale } = useEggSaleStore();
     const { clients } = useClientStore();
 
@@ -128,7 +132,7 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                             <FormComponent
                                 name="eggsale_code"
                                 fieldType={FormFieldType.INPUT}
-                                label="Code"
+                                label={t("egg_form_eggsale_saleCode")}
                                 placeholder=""
                                 value={data.eggsale_code}
                                 onChange={(e) => setData("eggsale_code", e.target.value)}
@@ -137,7 +141,7 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                             <FormComponent
                                 name="eggsale_date"
                                 fieldType={FormFieldType.DATE_PICKER}
-                                label="Date"
+                                label={t("egg_form_eggsale_saleDate")}
                                 placeholder=""
                                 value={data.eggsale_date}
                                 onChange={(e) => setData("eggsale_date", e.target.value)}
@@ -148,7 +152,7 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                             <FormComponent
                                 name="eggsale_client_name"
                                 fieldType={FormFieldType.SELECT}
-                                label="Client"
+                                label={t("egg_form_eggsale_customer")}
                                 placeholder={isEditMode ? selectedData?.eggsale_client_name : "Select Client"}
                                 value={data.eggsale_client_name}
                                 onChange={(e) => handleChange("eggsale_client_name", e.target.value)}
@@ -165,7 +169,7 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                             <FormComponent
                                 name="eggsale_description"
                                 fieldType={FormFieldType.INPUT}
-                                label="Description"
+                                label={t("egg_form_eggsale_description")}
                                 placeholder=""
                                 value={data.eggsale_description}
                                 onChange={(e) => setData("eggsale_description", e.target.value)}
@@ -176,7 +180,7 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                             <FormComponent
                                 name="eggsale_unit_price"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Prix Unitaire (CFA)"
+                                label={t("egg_form_eggsale_pricePerCrate")}
                                 placeholder=""
                                 value={data.eggsale_unit_price}
                                 onChange={(e) => setData("eggsale_unit_price", e.target.value)}
@@ -185,7 +189,7 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                             <FormComponent
                                 name="eggsale_quantity"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Quantity Plaquette(s)"
+                                label={t("egg_form_eggsale_quantity")}
                                 placeholder=""
                                 value={data.eggsale_quantity}
                                 onChange={(e) => setData("eggsale_quantity", e.target.value)}
@@ -196,7 +200,7 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                             <FormComponent
                                 name="eggsale_reduction"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Reduction (CFA)"
+                                label={t("egg_form_eggsale_reduction")}
                                 placeholder=""
                                 value={data.eggsale_reduction}
                                 onChange={(e) => setData("eggsale_reduction", e.target.value)}
@@ -205,7 +209,7 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                             <FormComponent
                                 name="eggsale_total_cost"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Total"
+                                label={t("egg_form_eggsale_totalPrice")}
                                 placeholder=""
                                 value={data.eggsale_total_cost = (Number(data.eggsale_unit_price) * Number(data.eggsale_quantity) - Number(data.eggsale_reduction)).toString()}
                                 onChange={(e) => setData("eggsale_total_cost", e.target.value)}
