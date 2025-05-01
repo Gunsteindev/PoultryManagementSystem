@@ -1,9 +1,8 @@
 import { useState, useRef } from 'react';
-import { Button } from "@/components/ui/button";
-import { PencilOff, Trash2 } from 'lucide-react';
+import { useTranslation } from "react-i18next";
 import DeleteDialog from '../dialog/DeleteDialog';
 import ProductForm from '../form/ProductForm';
-import { useTranslation } from "react-i18next";
+import DynamicTableComponent from './DynamicTableComponent';
 
 export interface PickupProp {
     pickup_id: number;
@@ -16,25 +15,24 @@ export interface PickupProp {
     pickup_total_quantity: string | number;      
 }
 
-export interface PickupResponse {
-    data: PickupProp[];
+interface DataRow {
+    id: number,
+    pickupCode: string,
+    roomCode: string,
+    numberOfCrate: string,
+    loss: string,
+    eggRemained: string,
+    totalNumberofEggs: string,
+    date: string,
+    item: PickupProp
 }
-
 
 interface PickupTableProp {
     pickupData: PickupProp[];
-
 }
 
 
 const PickupTable = ({ pickupData }: PickupTableProp) => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
-    const totalPages = pickupData ? Math.ceil(pickupData.length / itemsPerPage) : 0;
-    const currentItems = pickupData?.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    ) || [];
 
     const { t, i18n } = useTranslation();
 
@@ -54,76 +52,80 @@ const PickupTable = ({ pickupData }: PickupTableProp) => {
         setDeletedItem(item || null);
     };
 
-    const handlePageChange = (pageNumber: number) => setCurrentPage(pageNumber);
-
     if (!pickupData?.length) {
         return <p className="text-center py-4">{t("egg_noDataAvailable")}</p>;
     }
 
+    const columns = [
+        { header: t("egg_tableHeader_pickup_pickupCode"), accessor: 'pickupCode' },
+        { header: t("egg_tableHeader_pickup_roomCode"), accessor: 'roomCode' },
+        { header: t("egg_tableHeader_pickup_numberOfCrate"), accessor: 'numberOfCrate' },
+        { header: t("egg_tableHeader_pickup_loss"), accessor: 'loss' },
+        { header: t("egg_tableHeader_pickup_eggRemained"), accessor: 'eggRemained' },
+        { header: t("egg_tableHeader_pickup_totalNumberofEggs"), accessor: 'totalNumberofEggs' },
+        { header: t("egg_tableHeader_pickup_date"), accessor: 'date' },
+    ];
+
+    const data: DataRow[] = [
+      // Example data rows can be added here if needed
+    ];
+
+    pickupData.map((item: any) => {
+        data.push({
+            id: item.pickup_id,
+            pickupCode: item.pickup_code,
+            roomCode: item.pickup_batiment,
+            numberOfCrate: item.pickup_crate_quantity,
+            loss: item.pickup_quantity_loss,
+            eggRemained: item.pickup_quantity_remain,
+            totalNumberofEggs: item.pickup_total_quantity,
+            date: item.pickup_date,
+            item: item
+        });
+    });
+
+    const handleUpdate = (row: Record<string, any>) => {
+        // console.log('Update row:', row);
+        data.forEach((item) => {
+            if (item.id === row.id) {
+                item.pickupCode = row.pickupCode
+                item.roomCode = row.roomCode
+                item.numberOfCrate = row.numberOfCrate
+                item.loss = row.loss
+                item.eggRemained = row.eggRemained
+                item.totalNumberofEggs = row.totalNumberofEggs
+                item.date = row.date
+
+                toggleShowForm(true, item.item);
+            }
+        }
+    )};
+    
+    const handleDelete = (row: Record<string, any>) => {
+        // console.log('Delete row:', row);
+        data.forEach((item) => {
+            if (item.id === row.id) {
+                item.pickupCode = row.pickupCode
+                item.roomCode = row.roomCode
+                item.numberOfCrate = row.numberOfCrate
+                item.loss = row.loss
+                item.eggRemained = row.eggRemained
+                item.totalNumberofEggs = row.totalNumberofEggs
+                item.date = row.date
+
+                toggleDeleteDlg(true, item.item);
+            }
+        }
+    )};
+
     return (
         <div style={{ padding: '0px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }} className='bg-white dark:bg-slate-800'>
-                <thead>
-                    <tr>
-                    <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_pickupCode")}</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-md'>{t("egg_tableHeader_pickup_roomCode")}</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_numberOfCrate")}</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_loss")}</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_eggRemained")}</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_totalNumberofEggs")}</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>{t("egg_tableHeader_pickup_date")}</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentItems.map((item: any) => (
-                        <tr key={item.pickup_id}>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.pickup_code}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.pickup_batiment}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.pickup_crate_quantity}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.pickup_quantity_loss}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.pickup_quantity_remain}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.pickup_total_quantity}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.pickup_date}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>
-                                <div className='flex justify-start space-x-4'>
-                                    <Button
-                                        className='bg-orange-500 shadow-none'
-                                        onClick={() => toggleShowForm(true, item)}
-                                    >
-                                        <PencilOff size={20} />
-                                    </Button>
-                                    <Button
-                                        className='bg-red-500 shadow-none'
-                                        onClick={() => toggleDeleteDlg(true, item)}
-                                    >
-                                        <Trash2 size={20} />
-                                    </Button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div style={{ padding: '5px', display: 'flex', justifyContent: 'center' }}>
-                {[...Array(totalPages).keys()].map((pageNumber) => (
-                    <button
-                        key={pageNumber}
-                        style={{
-                            padding: '10px',
-                            margin: '5px',
-                            border: 'none',
-                            borderRadius: '5px',
-                            backgroundColor: currentPage === pageNumber + 1 ? '#007bff' : '#fff',
-                            color: currentPage === pageNumber + 1 ? '#fff' : '#007bff',
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => handlePageChange(pageNumber + 1)}
-                    >
-                        {pageNumber + 1}
-                    </button>
-                ))}
-            </div>
+            <DynamicTableComponent
+                columns={columns}
+                data={data}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+            />
             {editForm && (
                 <ProductForm
                     title={title.current}
@@ -138,12 +140,11 @@ const PickupTable = ({ pickupData }: PickupTableProp) => {
                     toggleDeleteDlg={toggleDeleteDlg}
                     deletedLabel={"pickup"} 
                     deletedID={deletedItem?.pickup_id}
-                    deletedDataHeader={deletedItem?.pickup_code} />
-                )
-            }
+                    deletedDataHeader={deletedItem?.pickup_code} 
+                />
+            )}
         </div>
     );
 };
 
 export default PickupTable;
-

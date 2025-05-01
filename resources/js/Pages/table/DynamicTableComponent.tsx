@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pencil, Trash2, Printer } from 'lucide-react';
+import { Pencil, Trash2, Printer, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface Column {
     header: string;
@@ -15,7 +15,10 @@ interface DynamicTableProps {
 
 const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onUpdate, onDelete }) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
+    // const itemsPerPage = 8;
+    const [itemsPerPage] = useState(8);
+    const [filterText, setFilterText] = useState('');
+    const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -31,20 +34,61 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
         }
     };
 
+    const handleSort = (key: string) => {
+        let direction: 'asc' | 'desc' = 'asc';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+          direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+    
+    const filteredData = data.filter((row) =>
+        columns.some((column) =>
+            String(row[column.accessor]).toLowerCase().includes(filterText.toLowerCase())
+        )
+    );
+    
+    const sortedData = sortConfig? [...filteredData].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+    }) : filteredData;
+
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentData = data.slice(startIndex, startIndex + itemsPerPage);
+    const currentData = sortedData.slice(startIndex, startIndex + itemsPerPage);
 
     return (
         <div className="overflow-x-auto">
+            {/* Filter Input */}
+            <div className="mb-4">
+                <input
+                    type="text"
+                    placeholder="Filter..."
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    className="w-[25%] px-4 py-2 border-none  rounded-md focus:outline-none dark:bg-slate-800"
+                />
+            </div>
             <table className="min-w-full  bg-white rounded-lg dark:bg-slate-800">
                 <thead className="bg-gray-100 dark:bg-slate-800">
                     <tr>
                         {columns.map((column, index) => (
                             <th
                                 key={index}
+                                onClick={() => handleSort(column.accessor)}
                                 className="px-4 py-2 text-left text-lg font-bold"
                             >
+                                <span className='flex items-center cursor-pointer'>
                                 {column.header}
+                                {sortConfig?.key === column.accessor && (
+                                    <>{sortConfig.direction === 'asc' ? <ArrowUp size={18}/> : <ArrowDown size={18} />}</>
+                                )}
+                                </span>
+                                
                             </th>
                         ))}
                         <th className="px-4 py-2 flex justify-center text-left text-lg font-bold">
@@ -60,10 +104,10 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                         >
                             {columns.map((column, colIndex) => (
                                 <td
-                                key={colIndex}
-                                className="px-4 py-2 text-sm"
+                                    key={colIndex}
+                                    className="px-4 py-2 text-sm"
                                 >
-                                {row[column.accessor]}
+                                    {row[column.accessor]}
                                 </td>
                             ))}
                             <td className="px-4 py-2 text-sm text-gray-700 flex justify-center space-x-2">
@@ -99,7 +143,7 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                     <button
                         onClick={handlePreviousPage}
                         disabled={currentPage === 1}
-                        className={`px-4 py-2 text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 rounded-md ${
+                        className={`px-4 py-2 text-sm font-medium bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md ${
                             currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                     >
@@ -108,7 +152,7 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                     <button
                         onClick={handleNextPage}
                         disabled={currentPage === totalPages}
-                        className={`px-4 py-2 text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 rounded-md ${
+                        className={`px-4 py-2 text-sm font-medium bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md ${
                             currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                     >

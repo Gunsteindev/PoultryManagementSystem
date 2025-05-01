@@ -102,11 +102,9 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({  deleteDlg, toggleDeleteDlg
                 return toast({ description: `${deletedDataHeader} deleted successfully.` });
 
             default:
-              console.error(`Unknown label: ${deletedLabel}`);
-              return toast({ description: `Failed to delete: Unknown label "${deletedLabel}".` });
+                // console.error(`Unknown label: ${deletedLabel}`);
+                return toast({ description: `Failed to delete: Unknown label "${deletedLabel}".` });
         }
-          
-
     };
 
     return (

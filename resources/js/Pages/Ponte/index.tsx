@@ -145,84 +145,81 @@ const Ponte = () => {
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-semibold">{t("egg")}</h1>
             </div>
-            <div className='grid grid-cols-3 gap-4'>
-                <Card className="dark:bg-slate-800 border shadow-none">
-                    <CardHeader>
-                        <CardTitle className="text-orange-600">{t("egg_totalEgg")}</CardTitle>
-                        <CardDescription>
-                            <div className=''>
-                                <span className='text-xl font-bold'>{totalQuantityEggsRemain}</span>
-                            </div>
-                        </CardDescription>
-                    </CardHeader>
-                </Card>
-                <Card className="dark:bg-slate-800 border shadow-none">
-                    <CardHeader>
-                        <CardTitle className="text-orange-600">{t("egg_totalCrateInStock")}</CardTitle>
-                        <CardDescription>
-                            <div className=''>
-                                <span className='text-xl font-bold'>{totalCrateQuantityRemain}</span>
-                            </div>
-                        </CardDescription>
-                    </CardHeader>
-                </Card>
-                <Card className="dark:bg-slate-800 border shadow-none">
-                    <CardHeader>
-                        <CardTitle className="text-orange-600">{t("egg_totalEggRemaining")}</CardTitle>
-                        <CardDescription>
-                            <div className=''>
-                                <span className='text-xl font-bold'>{totalNumberOfEggsRemain}</span>
-                            </div>
-                        </CardDescription>
-                    </CardHeader>
-                </Card>
+            <div className="flex justify-between bg-white dark:bg-slate-800 rounded-md">
+                {(roles === 'Admin' || 'Commercial' || 'Supervisor') && (
+                    <>
+                        <button
+                            className={`flex-1 py-2 text-center font-bold rounded-md ${
+                                activeTab === 'tab1' ? 'bg-orange-500 text-white' : 'text-gray-500'
+                            }`}
+                            onClick={() => handleTabClick('tab1')}
+                        >
+                            {t("egg_transaction")}
+                        </button>
+                    </>
+                )}
+                
+                {(roles === 'Admin' || 'Production' || 'Supervisor') && (
+                    <>
+                        <button
+                            className={`flex-1 py-2 text-center font-bold rounded-md ${
+                                activeTab === 'tab2' ? 'bg-orange-500 text-white' : 'text-gray-500'
+                            }`}
+                            onClick={() => handleTabClick('tab2')}
+                        >
+                            {t("egg_pickup")}
+                        </button>
+                    </>
+                )}
             </div>
-            <div className=" overflow-y-auto scrollbar-hidden space-y-8">
-                <div className="flex justify-between bg-white dark:bg-slate-800">
-                    {(roles === 'Admin' || 'Commercial' || 'Supervisor') && (
-                        <>
-                            <button
-                                className={`flex-1 py-2 text-center font-bold ${
-                                    activeTab === 'tab1' ? 'bg-orange-500 text-white' : 'text-gray-500'
-                                }`}
-                                onClick={() => handleTabClick('tab1')}
-                            >
-                                {t("egg_transaction")}
-                            </button>
-                        </>
-                    )}
-                    
-                    {(roles === 'Admin' || 'Production' || 'Supervisor') && (
-                        <>
-                            <button
-                                className={`flex-1 py-2 text-center font-bold ${
-                                    activeTab === 'tab2' ? 'bg-orange-500 text-white' : 'text-gray-500'
-                                }`}
-                                onClick={() => handleTabClick('tab2')}
-                            >
-                                {t("egg_pickup")}
-                            </button>
-                        </>
-                    )}
-                    
-                </div>
+            <div className=" overflow-y-auto scrollbar-hidden">
                 <div>
                     {activeTab === 'tab1' && (
-                        <div className="space-y-10 py-5">
-                            
+                        <div className="space-y-10">
+                            <div className='grid grid-cols-3 gap-4'>
+                                <Card className="dark:bg-slate-800 border shadow-none">
+                                    <CardHeader>
+                                        <CardTitle className="text-orange-600">{t("egg_totalEgg")}</CardTitle>
+                                        <CardDescription>
+                                            <div className=''>
+                                                <span className='text-xl font-bold'>{totalQuantityEggsRemain}</span>
+                                            </div>
+                                        </CardDescription>
+                                    </CardHeader>
+                                </Card>
+                                <Card className="dark:bg-slate-800 border shadow-none">
+                                    <CardHeader>
+                                        <CardTitle className="text-orange-600">{t("egg_totalCrateInStock")}</CardTitle>
+                                        <CardDescription>
+                                            <div className=''>
+                                                <span className='text-xl font-bold'>{totalCrateQuantityRemain}</span>
+                                            </div>
+                                        </CardDescription>
+                                    </CardHeader>
+                                </Card>
+                                <Card className="dark:bg-slate-800 border shadow-none">
+                                    <CardHeader>
+                                        <CardTitle className="text-orange-600">{t("egg_totalEggRemaining")}</CardTitle>
+                                        <CardDescription>
+                                            <div className=''>
+                                                <span className='text-xl font-bold'>{totalNumberOfEggsRemain}</span>
+                                            </div>
+                                        </CardDescription>
+                                    </CardHeader>
+                                </Card>
+                            </div>
                             <div className="flex space-x-5">
-                                
                                 {(roles === 'Admin' || 'Commercial' || 'Supervisor') && (
                                     <>
                                         <button
-                                            className="flex items-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border"
+                                            className="flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black"
                                             onClick={handleCustomerDialogToggle}
                                         >
                                             <Plus size={20} />
                                             <span>{t("egg_customer")}</span>
                                         </button>
                                         <button
-                                            className="flex items-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border"
+                                            className="flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 text-md"
                                             onClick={handleDialogToggle}
                                         >
                                             <Plus size={20} />
@@ -242,7 +239,7 @@ const Ponte = () => {
                         </div>
                     )}
                     {activeTab === 'tab2' && (
-                        <div className="space-y-5 py-5">
+                        <div className="space-y-10">
                             <div className="grid grid-cols-3 gap-4">
                                 <Card className="dark:bg-slate-800 border shadow-none">
                                     <CardHeader>
@@ -289,7 +286,6 @@ const Ponte = () => {
                                         {showPickupDlg && <ProductForm showDlg={showPickupDlg} toggleDlg={toggleShowPickupDlg} />}
                                     </>
                                 )}
-                               
                             </div>
                             <PickupTable pickupData={pickups} />
                         </div>

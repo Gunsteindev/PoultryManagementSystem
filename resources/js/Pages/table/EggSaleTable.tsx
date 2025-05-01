@@ -5,7 +5,7 @@ import DeleteDialog from '../dialog/DeleteDialog';
 import EggSaleForm from '../form/EggSaleForm';
 import { usePage } from '@inertiajs/react';
 import { useTranslation } from "react-i18next";
-  import DynamicTableComponent from './DynamicTableComponent';
+import DynamicTableComponent from './DynamicTableComponent';
 
 
   
@@ -33,9 +33,7 @@ interface DataRow {
     customer: string;
     date: string;
     item: EggSaleProp;
-    // update: () => void;
-    // delete: () => void;
-  }
+}
 
 export interface EggSaleResponse {
     data: EggSaleProp[];
@@ -44,19 +42,18 @@ export interface EggSaleResponse {
 
 interface EggSaleTableProp {
     eggsaleData: EggSaleProp[];
-
 }
 
 
 const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
     const user = usePage().props.auth.user;
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
-    const totalPages = eggsaleData ? Math.ceil(eggsaleData.length / itemsPerPage) : 0;
-    const currentItems = eggsaleData?.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    ) || [];
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const itemsPerPage = 5;
+    // const totalPages = eggsaleData ? Math.ceil(eggsaleData.length / itemsPerPage) : 0;
+    // const currentItems = eggsaleData?.slice(
+    //     (currentPage - 1) * itemsPerPage,
+    //     currentPage * itemsPerPage
+    // ) || [];
 
     const { t, i18n } = useTranslation();
 
@@ -78,15 +75,12 @@ const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
         setDeletedItem(item || null);
     };
 
-    const handlePageChange = (pageNumber: number) => setCurrentPage(pageNumber);
+    // const handlePageChange = (pageNumber: number) => setCurrentPage(pageNumber);
 
     if (!eggsaleData?.length) {
         return <p className="text-center py-4">{t("egg_noDataAvailable")}</p>;
     }
 
-
-
-    // ***********************************************
     const columns = [
         { header: t("egg_tableHeader_eggsale_saleCode"), accessor: 'saleCode' },
         { header: t("egg_tableHeader_eggsale_description"), accessor: 'description' },
@@ -96,9 +90,7 @@ const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
         { header: t("egg_tableHeader_eggsale_totalPrice"), accessor: 'totalPrice' },
         { header: t("egg_tableHeader_eggsale_customer"), accessor: 'customer' },
         { header: t("egg_tableHeader_eggsale_date"), accessor: 'date' },
-      ];
-    
-    
+    ];
 
     const data: DataRow[] = [
       // Example data rows can be added here if needed
@@ -116,16 +108,13 @@ const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
             customer: item.eggsale_client_name,
             date: item.eggsale_date,
             item: item
-            // update: () => toggleShowForm(true, item.item),
-            // delete: () => toggleDeleteDlg(true, item),
         });
-      });
+    });
 
-      const handleUpdate = (row: Record<string, any>) => {
+    const handleUpdate = (row: Record<string, any>) => {
         console.log('Update row:', row);
         data.forEach((item) => {
-        
-          if (item.id === row.id) {
+            if (item.id === row.id) {
             item.saleCode = row.saleCode;
             item.description = row.description;
             item.quantity = row.quantity;
@@ -136,28 +125,27 @@ const EggSaleTable = ({ eggsaleData }: EggSaleTableProp) => {
             item.date = row.date;
 
             toggleShowForm(true, item.item);
-          }
+            }
         }
-      )};
+    )};
     
-      const handleDelete = (row: Record<string, any>) => {
+    const handleDelete = (row: Record<string, any>) => {
         console.log('Delete row:', row);
         data.forEach((item) => {
-        
             if (item.id === row.id) {
-              item.saleCode = row.saleCode;
-              item.description = row.description;
-              item.quantity = row.quantity;
-              item.unitPrice = row.unitPrice;
-              item.reduction = row.reduction;
-              item.totalPrice = row.totalPrice;
-              item.customer = row.customer;
-              item.date = row.date;
-  
-              toggleDeleteDlg(true, item.item);
+                item.saleCode = row.saleCode;
+                item.description = row.description;
+                item.quantity = row.quantity;
+                item.unitPrice = row.unitPrice;
+                item.reduction = row.reduction;
+                item.totalPrice = row.totalPrice;
+                item.customer = row.customer;
+                item.date = row.date;
+
+                toggleDeleteDlg(true, item.item);
             }
-          }
-      )};
+        }
+    )};
 
 
     return (

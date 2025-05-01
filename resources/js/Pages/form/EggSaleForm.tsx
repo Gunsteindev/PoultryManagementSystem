@@ -93,23 +93,23 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
             if (isEditMode) {
                 // Update the Egg Sale
                 updateEggSale(selectedData?.eggsale_id, data);
-                console.log("Response:", data);
+                // console.log("Response:", data);
                 toggleDlg(false); // Close dialog on success
                 toast({ description: 'Egg Sale updated successfully.' });
             } else {
                 // Create a new Egg Sale
                 addEggSale(data);
-                console.log("Response:", data);
+                // console.log("Response:", data);
                 toggleDlg(false); // Close dialog on success
                 toast({ description: 'Egg Sale created successfully.' });
             }
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 const errors = error.response.data.errors || 'An unexpected error occurred.';
-                console.log("Validation errors:", errors);
+                // console.log("Validation errors:", errors);
                 toast({ description: `Validation errors: ${errors}` });
             } else {
-                console.error("Unexpected error:", error);
+                // console.error("Unexpected error:", error);
                 toast({ description: 'An unexpected error occurred.' });
             }
         }
@@ -221,9 +221,9 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                         <div className='w-full'>
                             <Button className='w-full bg-orange-600' type="submit" disabled={processing}>Save</Button>
                         </div>
-                        {/* <div className='w-full'>
+                        <div className='w-full'>
                             <Button className='w-full bg-orange-600' type="button" onClick={() => toggleDlg(false)}>Cancel</Button>
-                        </div> */}
+                        </div>
                     </div>
                 </form>
             </DialogContent>
