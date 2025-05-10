@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react';
-import { Button } from "@/components/ui/button";
-import { PencilOff, Trash2 } from 'lucide-react';
+import { useTranslation } from "react-i18next";
+import { usePage } from '@inertiajs/react';
 import DeleteDialog from '../dialog/DeleteDialog';
 import BandPurchaseForm from '../form/BandPurchaseForm';
-import { usePage } from '@inertiajs/react';
+import DynamicTableComponent from './DynamicTableComponent';
 
 
 export interface BandPurchaseProp {
@@ -18,10 +18,18 @@ export interface BandPurchaseProp {
     band_purchase_unit_price: string;  
 }
 
-export interface BandPurchaseResponse {
-    data: BandPurchaseProp[];
+interface DataRow {
+    id: number,
+    purchaseCode: string,
+    bandCode: string,
+    description: string,
+    quantity: string,
+    unitPrice: string,
+    reduction: string,
+    totalPrice: string,
+    date: string,
+    item: BandPurchaseProp
 }
-
 
 interface BandPurchaseTableProp {
     bandPurchaseData: BandPurchaseProp[];
@@ -31,13 +39,8 @@ interface BandPurchaseTableProp {
 const BandPurchaseTable = ({ bandPurchaseData }: BandPurchaseTableProp) => {
     const user = usePage().props.auth.user;
     const roles = user.data.roles[0];
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
-    const totalPages = bandPurchaseData ? Math.ceil(bandPurchaseData.length / itemsPerPage) : 0;
-    const currentItems = bandPurchaseData?.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    ) || [];
+
+    const { t, i18n } = useTranslation();
 
     const [editForm, setEditForm] = useState(false);
     const [deleteDlg, setDeleteDlg] = useState(false);
@@ -55,83 +58,66 @@ const BandPurchaseTable = ({ bandPurchaseData }: BandPurchaseTableProp) => {
         setDeletedItem(item || null);
     };
 
-    const handlePageChange = (pageNumber: number) => setCurrentPage(pageNumber);
-
     if (!bandPurchaseData?.length) {
-        return <p className="text-center py-4">No Achat volaille data available.</p>;
+        return <p className="text-center py-4">{t("noDataAvailable")}</p>;
     }
+
+    const columns = [
+        { header: t("bird_tableHeader_bandpurchase_purchaseCode"), accessor: 'purchaseCode' },
+        { header: t("bird_tableHeader_bandpurchase_bandCode"), accessor: 'bandCode' },
+        { header: t("bird_tableHeader_bandpurchase_description"), accessor: 'description' },
+        { header: t("bird_tableHeader_bandpurchase_quantity"), accessor: 'quantity' },
+        { header: t("bird_tableHeader_bandpurchase_unitPrice"), accessor: 'unitPrice' },
+        { header: t("bird_tableHeader_bandpurchase_reduction"), accessor: 'reduction' },
+        { header: t("bird_tableHeader_bandpurchase_totalPrice"), accessor: 'totalPrice' },
+        { header: t("bird_tableHeader_bandpurchase_date"), accessor: 'date' },
+    ];
+
+    const data: DataRow[] = [
+      // Example data rows can be added here if needed
+    ];
+
+    bandPurchaseData.map((item: any) => {
+        data.push({
+            id: item.pickup_id,
+            purchaseCode: item.band_purchase_code,
+            bandCode: item.band_purchase_band_code,
+            description: item.band_purchase_description,
+            quantity: item.band_purchase_quantity,
+            unitPrice: item.band_purchase_unit_price,
+            reduction: item.band_purchase_reduction,
+            totalPrice: item.band_purchase_total_cost,
+            date: item.band_purchase_date,
+            item: item
+        });
+    });
+
+    const handleUpdate = (row: Record<string, any>) => {
+        // console.log('Update row:', row);
+        data.forEach((item) => {
+            if (item.id === row.id) {
+                toggleShowForm(true, item.item);
+            }
+        }
+    )};
+    
+    const handleDelete = (row: Record<string, any>) => {
+        // console.log('Delete row:', row);
+        data.forEach((item) => {
+            if (item.id === row.id) {
+                toggleDeleteDlg(true, item.item);
+            }
+        }
+    )};
 
     return (
         <div style={{ padding: '0px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }} className='bg-white dark:bg-slate-800'>
-                <thead>
-                    <tr>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-md'>Purchase Code</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Band Code</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Description</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Quantite</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Prix Unitaire</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Reduction</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Prix Total</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Date</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentItems.map((item: BandPurchaseProp) => (
-                        <tr key={item.band_id}>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.band_purchase_code}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.band_purchase_band_code}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.band_purchase_description}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.band_purchase_quantity}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.band_purchase_unit_price}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.band_purchase_reduction}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.band_purchase_total_cost}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.band_purchase_date}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>
-                                <div className='flex justify-start space-x-4'>
-                                    <Button
-                                        className='bg-orange-500 shadow-none'
-                                        onClick={() => toggleShowForm(true, item)}
-                                    >
-                                        <PencilOff size={20} />
-                                    </Button>
-                                    {(roles === 'Admin' || roles === 'Supervisor') && (
-                                        <>
-                                            <Button
-                                                className='bg-red-500 shadow-none'
-                                                onClick={() => toggleDeleteDlg(true, item)}
-                                            >
-                                                <Trash2 size={20} />
-                                            </Button>
-                                        </>
-                                    )}
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div style={{ padding: '5px', display: 'flex', justifyContent: 'center' }}>
-                {[...Array(totalPages).keys()].map((pageNumber) => (
-                    <button
-                        key={pageNumber}
-                        style={{
-                            padding: '10px',
-                            margin: '5px',
-                            border: 'none',
-                            borderRadius: '5px',
-                            backgroundColor: currentPage === pageNumber + 1 ? '#007bff' : '#fff',
-                            color: currentPage === pageNumber + 1 ? '#fff' : '#007bff',
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => handlePageChange(pageNumber + 1)}
-                    >
-                        {pageNumber + 1}
-                    </button>
-                ))}
-            </div>
+            <DynamicTableComponent
+                columns={columns}
+                data={data}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+            />
             {editForm && (
                 <BandPurchaseForm
                     title={title.current}
@@ -154,4 +140,3 @@ const BandPurchaseTable = ({ bandPurchaseData }: BandPurchaseTableProp) => {
 };
 
 export default BandPurchaseTable;
-

@@ -1,27 +1,28 @@
 import { FormEventHandler, useState } from 'react';
-import axios from 'axios';
 import { SelectItem } from '@/Components/ui/select';
 import { Plus } from 'lucide-react'
 import { ReactNode } from "react";
 import { FormFieldType } from '@/Components/ui/customFormField';
 import { Button } from '@/components/ui/button';
-import BatimentForm from '../form/BatimentForm';
-import BatimentTable from '../table/BatimentTable';
-import Dashboard from '../Dashboard';
-import FormComponent from '@/Components/ui/formComponent';
-import { usePage, useForm } from '@inertiajs/react';
-import { useToast } from '@/Components/hooks/use-toast';
-import CustomerTable from '../table/CustomerTable';
-import SupplierTable from '../table/SupplierTable';
-import FoodTable from '../table/FoodTable';
-import TransferTable from '../table/TransferTable';
 import { TransferProp } from '../table/TransferTable';
 import { useClientStore } from '@/lib/Stores/customerStore';
 import { useSupplierStore } from '@/lib/Stores/supplierStore';
-import { useFoodStore } from '@/lib/Stores/foodStore';
 import { useBatimentStore } from '@/lib/Stores/batimentStore';
 import { useTransferStore } from '@/lib/Stores/transferStore';
 import { useBandPurchaseStore } from '@/lib/Stores/bandPurchaseStore';
+import { usePage, useForm } from '@inertiajs/react';
+import { useToast } from '@/Components/hooks/use-toast';
+import { useTranslation } from "react-i18next";
+import CustomerForm from '../form/CustomerForm';
+import BatimentForm from '../form/BatimentForm';
+import SupplierForm from '../form/SupplierForm';
+import BatimentTable from '../table/BatimentTable';
+import Dashboard from '../Dashboard';
+import FormComponent from '@/Components/ui/formComponent';
+import CustomerTable from '../table/CustomerTable';
+import SupplierTable from '../table/SupplierTable';
+import TransferTable from '../table/TransferTable';
+import axios from 'axios';
 
 type ResultType = {
     code: string;
@@ -56,12 +57,17 @@ interface HomeProp {
 const Home = ({selectedData}: HomeProp) => {
 
     const [showDlg, setShowDlg] = useState(false)
+    const [showCustomerAndSupplierDlg, setShowCustomerAndSupplierDlg] = useState(false);
+
     const { clients } = useClientStore();
     const { suppliers } = useSupplierStore();
-    const { foods } = useFoodStore();
     const { batiments } = useBatimentStore();
     const { transfers, addTransfer } = useTransferStore();
     const { bandPurchases } = useBandPurchaseStore();
+
+    const { t, i18n } = useTranslation();
+
+    const toggleShowCustomerAndSupplierDlg = (open: boolean) => setShowCustomerAndSupplierDlg(open);
 
     const totalQuantityByBand = (transfers ?? [])
     .filter((transfer: TransferProp) => transfer.transfer_band_code !== undefined) // Ensure there is a band code
@@ -80,6 +86,7 @@ const Home = ({selectedData}: HomeProp) => {
     // console.log("Answer2", result);
 
 
+
     const toggleShowDlg = (open: boolean) => {
         // title.current = "EDIT PRODUCT"
         setShowDlg(open);
@@ -88,6 +95,11 @@ const Home = ({selectedData}: HomeProp) => {
     const handleDialogToggle = (e: React.MouseEvent) => {
         e.stopPropagation(); // Stop event propagation
         toggleShowDlg(true); // Open the dialog (you can pass 'false' to close it)
+    };
+
+    const handleCustomerAndSupplierDialogToggle = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        toggleShowCustomerAndSupplierDlg(true);
     };
 
     const user = usePage().props.auth.user;
@@ -161,85 +173,110 @@ const Home = ({selectedData}: HomeProp) => {
         <>
             <div className="w-full p-10 mx-auto space-y-8">
                 <div className='flex justify-between items-center'>
-                    <div><h1 className='text-2xl font-semibold'>Admin Settings</h1></div>
+                    <div><h1 className='text-2xl font-semibold'>{t("admin")}</h1></div>
                 </div>
                 <div className="overflow-y-auto scrollbar-hidden space-y-8">
                     {/* Tab Buttons */}
                     <div className="flex justify-between bg-white dark:bg-slate-800">
                         <button
-                            className={`flex-1 py-2 text-center  ${
+                            className={`flex-1 py-2 text-center rounded-md  ${
                                 activeTab === "tab1"
                                 ? " bg-orange-500 text-white"
                                 : "text-gray-500"
                             }`}
                             onClick={() => handleTabClick("tab1")}
                         >
-                            Client
+                            {t("customer")}
                         </button>
                         <button
-                            className={`flex-1 py-2 text-center  ${
+                            className={`flex-1 py-2 text-center rounded-md  ${
                                 activeTab === "tab2"
                                 ? "bg-orange-500 text-white"
                                 : "text-gray-500"
                             }`}
                             onClick={() => handleTabClick("tab2")}
                         >
-                            Fournisseur
+                            {t("supplier")}
                         </button>
                         <button
-                            className={`flex-1 py-2 text-center  ${
+                            className={`flex-1 py-2 text-center rounded-md  ${
                                 activeTab === "tab3"
                                 ? "bg-orange-500 text-white"
                                 : "text-gray-500"
                             }`}
                             onClick={() => handleTabClick("tab3")}
                         >
-                            Users
+                            {t("user")}
                         </button>
                         <button
-                            className={`flex-1 py-2 text-center  ${
+                            className={`flex-1 py-2 text-center rounded-md  ${
                                 activeTab === "tab4"
                                 ? "bg-orange-500 text-white"
                                 : "text-gray-500"
                             }`}
                             onClick={() => handleTabClick("tab4")}
                         >
-                            Batiment
+                            {t("room")}
                         </button>
                         <button
-                            className={`flex-1 py-2 text-center  ${
+                            className={`flex-1 py-2 text-center rounded-md  ${
                                 activeTab === "tab5"
                                 ? "bg-orange-500 text-white"
                                 : "text-gray-500"
                             }`}
                             onClick={() => handleTabClick("tab5")}
                         >
-                            Transfer de Volaille
+                            {t("transfer")}
                         </button>
                         <button
-                            className={`flex-1 py-2 text-center  ${
+                            className={`flex-1 py-2 text-center rounded-md  ${
                                 activeTab === "tab6"
                                 ? "bg-orange-500 text-white"
                                 : "text-gray-500"
                             }`}
                             onClick={() => handleTabClick("tab6")}
                         >
-                            Accessoires
+                            {t("accessory")}
                         </button>
                     </div>
 
                     {/* Tab Content */}
-                    <div className="">
-                        {activeTab === "tab1" && 
-                            <div className=''>
-                                <CustomerTable customerData={clients}/>
-                            </div>
-                        }
-                        {activeTab === "tab2" && 
-                            <div>
-                                <SupplierTable supplierData={suppliers}/>
-                            </div>
-                        }
+                    <div className="space-y-5">
+                        {activeTab === "tab1" && (
+                            <>
+                                <div className="flex space-x-5">
+                                    <button
+                                        className="flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black"
+                                        onClick={handleCustomerAndSupplierDialogToggle}
+                                    >
+                                        <Plus size={20} />
+                                        <span>{t("customer_newCustomer")}</span>
+                                    </button>
+                                    {showCustomerAndSupplierDlg && <CustomerForm showDlg={showCustomerAndSupplierDlg} toggleDlg={toggleShowCustomerAndSupplierDlg} />}
+                                </div>
+                                <div className=''>
+                                    <CustomerTable customerData={clients}/>
+                                </div>
+                            </>
+                        )}
+                        {activeTab === "tab2" && ( 
+                            <>
+                                <div className=''>
+                                    <button 
+                                        className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
+                                        onClick={handleCustomerAndSupplierDialogToggle}
+                                    >
+                                        <Plus size={20} />
+                                        <span>{t("supplier_newSupplier")}</span>
+                                    </button>
+                                    {showCustomerAndSupplierDlg && <SupplierForm showDlg={showCustomerAndSupplierDlg} toggleDlg={toggleShowCustomerAndSupplierDlg} />}
+                                </div>
+                                <div>
+                                    <SupplierTable supplierData={suppliers}/>
+                                </div>
+                            </>
+                            
+                        )}
                         {activeTab === "tab3" && 
                             <div>
                                 {/* <FoodTable foodData={foods}/> */}
@@ -249,8 +286,12 @@ const Home = ({selectedData}: HomeProp) => {
                             <div className='space-y-5'>
                                 <div className='flex space-x-10'>
                                     <div className=''>
-                                        <button className='flex item-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border' onClick={handleDialogToggle}><Plus size={20} />
-                                            <span>Nouveau Batiment</span>
+                                        <button 
+                                            className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
+                                            onClick={handleDialogToggle}
+                                        >
+                                            <Plus size={20} />
+                                            <span>{t("room_newRoom")}</span>
                                         </button>
                                         {showDlg && <BatimentForm showDlg={showDlg} toggleDlg={toggleShowDlg} />}
                                     </div>
@@ -267,7 +308,7 @@ const Home = ({selectedData}: HomeProp) => {
                                         <FormComponent
                                             name="transfer_batiment_code"
                                             fieldType={FormFieldType.SELECT}
-                                            label="Batiment"
+                                            label={t("transfer_form_roomCode")}
                                             placeholder=""
                                             value={data.transfer_batiment_code}
                                             onChange={(e) => setData("transfer_batiment_code", e.target.value)}
@@ -284,7 +325,7 @@ const Home = ({selectedData}: HomeProp) => {
                                         <FormComponent
                                             name="transfer_band_purchase_code"
                                             fieldType={FormFieldType.SELECT}
-                                            label="Band"
+                                            label={t("transfer_form_bandCode")}
                                             placeholder=""
                                             value={data.transfer_band_code}
                                             onChange={(e) => setData("transfer_band_code", e.target.value)}
@@ -311,7 +352,7 @@ const Home = ({selectedData}: HomeProp) => {
                                         <FormComponent
                                             name="transfer_quantity"
                                             fieldType={FormFieldType.NUMBER}
-                                            label="Quantite"
+                                            label={t("transfer_form_transferQuantity")}
                                             placeholder=""
                                             value={data.transfer_quantity}
                                             onChange={(e) => setData("transfer_quantity", e.target.value)}
@@ -319,7 +360,7 @@ const Home = ({selectedData}: HomeProp) => {
                                         />
                                     </div>
                                     <div className='flex gap-x-4 items-end'>
-                                        <div className='w-full'><Button className='w-full bg-orange-600 dark:text-white' type="submit">Transferer</Button></div>
+                                        <div className='w-full'><Button className='w-full bg-orange-600 dark:text-white' type="submit">{t("transfer_newTransfer")}</Button></div>
                                     </div>
                                 </form>
                                 <TransferTable transferData={transfers} />

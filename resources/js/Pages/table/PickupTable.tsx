@@ -53,7 +53,7 @@ const PickupTable = ({ pickupData }: PickupTableProp) => {
     };
 
     if (!pickupData?.length) {
-        return <p className="text-center py-4">{t("egg_noDataAvailable")}</p>;
+        return <p className="text-center py-4">{t("noDataAvailable")}</p>;
     }
 
     const columns = [
@@ -88,14 +88,6 @@ const PickupTable = ({ pickupData }: PickupTableProp) => {
         // console.log('Update row:', row);
         data.forEach((item) => {
             if (item.id === row.id) {
-                item.pickupCode = row.pickupCode
-                item.roomCode = row.roomCode
-                item.numberOfCrate = row.numberOfCrate
-                item.loss = row.loss
-                item.eggRemained = row.eggRemained
-                item.totalNumberofEggs = row.totalNumberofEggs
-                item.date = row.date
-
                 toggleShowForm(true, item.item);
             }
         }
@@ -105,14 +97,6 @@ const PickupTable = ({ pickupData }: PickupTableProp) => {
         // console.log('Delete row:', row);
         data.forEach((item) => {
             if (item.id === row.id) {
-                item.pickupCode = row.pickupCode
-                item.roomCode = row.roomCode
-                item.numberOfCrate = row.numberOfCrate
-                item.loss = row.loss
-                item.eggRemained = row.eggRemained
-                item.totalNumberofEggs = row.totalNumberofEggs
-                item.date = row.date
-
                 toggleDeleteDlg(true, item.item);
             }
         }

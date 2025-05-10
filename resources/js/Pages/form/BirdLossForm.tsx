@@ -1,16 +1,16 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useForm, usePage } from '@inertiajs/react';
-import FormComponent from '@/Components/ui/formComponent';
 import { FormEventHandler, useState } from 'react';
 import { FormFieldType } from '@/Components/ui/formComponent';
 import { useToast } from '@/Components/hooks/use-toast';
 import { SelectItem } from "@/Components/ui/select"
-import axios from "axios"
-import { useBirdSaleStore } from "@/lib/Stores/birdSaleStore";
 import { useBatimentStore } from "@/lib/Stores/batimentStore";
 import { BirdLossProp } from "../table/BirdLossTable";
 import { useBirdLossStore } from "@/lib/Stores/BirdLossStore";
+import FormComponent from '@/Components/ui/formComponent';
+import axios from "axios"
+
 
 
 interface FormData {

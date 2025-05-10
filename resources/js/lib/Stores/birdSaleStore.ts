@@ -58,7 +58,7 @@ export const useBirdSaleStore = create<BirdSaleStore>((set) => ({
     // Add a new birdSale
     addBirdSale: async (birdSale: AddBirdSaleProp) => {
         try {
-            const response = await axios.post<BirdSaleProp>('/api/birdsale', birdSale);
+            const response = await axios.post<AddBirdSaleProp>('/api/birdsale', birdSale);
             // const newBirdSale: BirdSaleProp = { ...response.data, bird_sale_id: response.data.bird_sale_id || Date.now() };
             // set((state) => ({
             //     birdSales: [...state.birdSales, newBirdSale],
@@ -105,8 +105,3 @@ export const useBirdSaleStore = create<BirdSaleStore>((set) => ({
 
 // Automatically call fetchBirdSales when the store is initialized
 useBirdSaleStore.getState().fetchBirdSales();
-
-
-
-
-

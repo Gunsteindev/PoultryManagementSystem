@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Pencil, Trash2, Printer, ArrowUp, ArrowDown } from 'lucide-react';
+import { Pencil, Trash2, Printer, ArrowUp, ArrowDown, MoreHorizontalIcon } from 'lucide-react';
+import { useTranslation } from "react-i18next";
 
 interface Column {
     header: string;
@@ -19,6 +20,8 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
     const [itemsPerPage] = useState(8);
     const [filterText, setFilterText] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+
+    const { t, i18n } = useTranslation();
 
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -62,7 +65,7 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
     const currentData = sortedData.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto h-full">
             {/* Filter Input */}
             <div className="mb-4">
                 <input
@@ -110,25 +113,66 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                                     {row[column.accessor]}
                                 </td>
                             ))}
-                            <td className="px-4 py-2 text-sm text-gray-700 flex justify-center space-x-2">
-                                <button
-                                    onClick={() => onUpdate(row)}
-                                    className="px-3 py-1 text-white rounded-md bg-green-500 hover:bg-green-600"
-                                >
-                                    <Pencil size={22} />
-                                </button>
-                                <button
-                                    onClick={() => onDelete(row)}
-                                    className="px-3 py-1 text-white rounded-md bg-red-500 hover:bg-red-600"
-                                >
-                                    <Trash2 size={22} />
-                                </button>
-                                <button
-                                    onClick={() => onDelete(row)}
-                                    className="px-3 py-1 text-white rounded-md bg-gray-500 hover:bg-gray-600"
-                                >
-                                    <Printer size={22} />
-                                </button>
+                            <td className="px-4 py-2 text-sm flex justify-center">
+                                {/* Popover for Actions */}
+                                <div className="relative">
+                                    <button
+                                        onClick={(e) => {
+                                        e.stopPropagation(); // Prevent event bubbling
+                                        const popover = document.getElementById(`popover-${rowIndex}`);
+                                        if (popover) {
+                                            popover.classList.toggle('hidden'); // Toggle visibility
+                                        }
+                                        }}
+                                        className=""
+                                    >
+                                        <MoreHorizontalIcon size={22} />
+                                    </button>
+                                    <div
+                                        id={`popover-${rowIndex}`}
+                                        className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 hidden"
+                                    >
+                                        <button
+                                            onClick={() => {
+                                                onUpdate(row);
+                                                const popover = document.getElementById(`popover-${rowIndex}`);
+                                                if (popover) {
+                                                    popover.classList.add('hidden'); // Hide popover
+                                                }
+                                            }}
+                                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            <Pencil size={18} className="inline mr-2" />
+                                            {t("action_btn_update")}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                onDelete(row);
+                                                const popover = document.getElementById(`popover-${rowIndex}`);
+                                                if (popover) {
+                                                    popover.classList.add('hidden'); // Hide popover
+                                                }
+                                            }}
+                                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            <Trash2 size={18} className="inline mr-2" />
+                                            {t("action_btn_delete")}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                console.log('Print', row);
+                                                const popover = document.getElementById(`popover-${rowIndex}`);
+                                                if (popover) {
+                                                    popover.classList.add('hidden'); // Hide popover
+                                                }
+                                            }}
+                                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            <Printer size={18} className="inline mr-2" />
+                                            {t("action_btn_print")}
+                                        </button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     ))}
@@ -143,7 +187,7 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                     <button
                         onClick={handlePreviousPage}
                         disabled={currentPage === 1}
-                        className={`px-4 py-2 text-sm font-medium bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md ${
+                        className={`px-4 py-2 text-sm font-medium bg-gray-300 dark:bg-gray-700 rounded-md ${
                             currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                     >
@@ -152,7 +196,7 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                     <button
                         onClick={handleNextPage}
                         disabled={currentPage === totalPages}
-                        className={`px-4 py-2 text-sm font-medium bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md ${
+                        className={`px-4 py-2 text-sm font-medium bg-gray-300 dark:bg-gray-700 rounded-md ${
                             currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                     >

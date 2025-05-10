@@ -58,7 +58,7 @@ export const useEggSaleStore = create<EggSaleStore>((set) => ({
     // Add a new eggSale
     addEggSale: async (eggSale: AddEggSaleProp) => {
         try {
-            const response = await axios.post<EggSaleProp>('/api/eggsale', eggSale);
+            const response = await axios.post<AddEggSaleProp>('/api/eggsale', eggSale);
             // const newEggSale: EggSaleProp = { ...response.data, eggsale_id: response.data.eggsale_id || Date.now() };
             // set((state) => ({
             //     eggSales: [...state.eggSales, newEggSale],

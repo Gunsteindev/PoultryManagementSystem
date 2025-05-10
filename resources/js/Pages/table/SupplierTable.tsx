@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
-import { Button } from "@/components/ui/button";
-import { PencilOff, Trash2 } from 'lucide-react';
+import { useTranslation } from "react-i18next";
 import DeleteDialog from '../dialog/DeleteDialog';
 import SupplierForm from '../form/SupplierForm';
+import DynamicTableComponent from './DynamicTableComponent';
 
 export interface SupplierProp {
     supplier_id?: number;
@@ -14,8 +14,15 @@ export interface SupplierProp {
     supplier_telephone: string;
 }
 
-export interface SupplierResponse {
-    data: SupplierProp[];
+interface DataRow {
+    id?: number;
+    supplierName: string,
+    supplierPosition: string,
+    supplierCompany: string,
+    supplierEmail: string,
+    supplierMobile: string,
+    supplierAddress: string,
+    item: SupplierProp;
 }
 
 interface SupplierTableProp {
@@ -23,19 +30,14 @@ interface SupplierTableProp {
 }
 
 const SupplierTable = ({ supplierData }: SupplierTableProp) => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
-    const totalPages = supplierData ? Math.ceil(supplierData.length / itemsPerPage) : 0;
-    const currentItems = supplierData?.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    ) || [];
 
     const [editForm, setEditForm] = useState(false);
     const [deleteDlg, setDeleteDlg] = useState(false);
     const [selectedItem, setSelectedItem] = useState<SupplierProp | null>(null);
     const [deletedItem, setDeletedItem] = useState<SupplierProp | null>(null);
     const title = useRef("");
+
+    const { t, i18n } = useTranslation();
 
     const toggleShowForm = (open: boolean, item?: SupplierProp) => {
         setEditForm(open);
@@ -47,76 +49,62 @@ const SupplierTable = ({ supplierData }: SupplierTableProp) => {
         setDeletedItem(item || null);
     };
 
-    const handlePageChange = (pageNumber: number) => setCurrentPage(pageNumber);
-
     if (!supplierData?.length) {
-        return <p className="text-center py-4">No Supplier data available.</p>;
+        return <p className="text-center py-4">{t("noDataAvailable")}</p>;
     }
+
+    const columns = [
+        { header: t("supplier_tableHeader_supplierName"), accessor: 'supplierName' },
+        { header: t("supplier_tableHeader_supplierPosition"), accessor: 'supplierPosition' },
+        { header: t("supplier_tableHeader_supplierCompany"), accessor: 'supplierCompany' },
+        { header: t("supplier_tableHeader_supplierEmail"), accessor: 'supplierEmail' },
+        { header: t("supplier_tableHeader_supplierMobile"), accessor: 'supplierMobile' },
+        { header: t("supplier_tableHeader_supplierAddress"), accessor: 'supplierAddress' },
+    ];
+
+    const data: DataRow[] = [
+        // Example data rows can be added here if needed
+    ];
+
+    supplierData.map((item: SupplierProp) =>{
+        data.push({
+            id: item.supplier_id,
+            supplierName: item.supplier_name,
+            supplierPosition: item.supplier_position,
+            supplierCompany: item.supplier_company,
+            supplierEmail: item.supplier_role,
+            supplierMobile: item.supplier_address,
+            supplierAddress: item.supplier_telephone,
+            item: item
+        });
+    });
+    
+    const handleUpdate = (row: Record<string, any>) => {
+        console.log('Update row:', row);
+        data.forEach((item) => {
+            if (item.id === row.id) {
+                toggleShowForm(true, item.item);
+            }
+        }
+    )};
+    
+    const handleDelete = (row: Record<string, any>) => {
+        console.log('Delete row:', row);
+        data.forEach((item) => {
+            if (item.id === row.id) {
+                toggleDeleteDlg(true, item.item);
+            }
+        }
+    )};
 
     return (
         <div style={{ padding: '0px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }} className='bg-white dark:bg-slate-800'>
-                <thead>
-                    <tr>
-                        {/* <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-md'>ID</th> */}
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-md'>Nom</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Position</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Compagnie</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Role</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Address</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Telephone</th>
-                        <th className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3'>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentItems.map((item: any) => (
-                        <tr key={item.supplier_id}>
-                            {/* <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.supplier_id}</td> */}
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.supplier_name}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.supplier_position}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.supplier_company}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.supplier_role}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.supplier_address}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>{item.supplier_telephone}</td>
-                            <td className='text-start border dark:border-gray-700 rounded-xl ps-2 py-3 text-sm'>
-                                <div className='flex justify-start space-x-4'>
-                                    <Button
-                                        className='bg-orange-500 shadow-none'
-                                        onClick={() => toggleShowForm(true, item)}
-                                    >
-                                        <PencilOff size={20} />
-                                    </Button>
-                                    <Button
-                                        className='bg-red-500 shadow-none'
-                                        onClick={() => toggleDeleteDlg(true, item)}
-                                    >
-                                        <Trash2 size={20} />
-                                    </Button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div style={{ padding: '5px', display: 'flex', justifyContent: 'center' }}>
-                {[...Array(totalPages).keys()].map((pageNumber) => (
-                    <button
-                        key={pageNumber}
-                        style={{
-                            padding: '10px',
-                            margin: '5px',
-                            border: 'none',
-                            borderRadius: '5px',
-                            backgroundColor: currentPage === pageNumber + 1 ? '#007bff' : '#fff',
-                            color: currentPage === pageNumber + 1 ? '#fff' : '#007bff',
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => handlePageChange(pageNumber + 1)}
-                    >
-                        {pageNumber + 1}
-                    </button>
-                ))}
-            </div>
+            <DynamicTableComponent
+                columns={columns}
+                data={data}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+            />
             {editForm && (
                 <SupplierForm
                     title={title.current}

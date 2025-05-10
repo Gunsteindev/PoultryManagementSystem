@@ -19,17 +19,23 @@ import { useTranslation } from "react-i18next";
 const Ponte = () => {
 
     const user = usePage().props.auth.user;
+    const roles = user.data.roles[0];
+
     const [showDlg, setShowDlg] = useState(false);
     const [showPickupDlg, setShowPickupDlg] = useState(false);
     const [showCustomerDlg, setShowCustomerDlg] = useState(false);
     const [activeTab, setActiveTab] = useState('tab1');
-    const toggleShowDlg = (open: boolean) => setShowDlg(open);
-    const toggleShowPickupDlg = (open: boolean) => setShowPickupDlg(open);
-    const toggleShowCustomerDlg = (open: boolean) => setShowCustomerDlg(open);
+
+    const { t, i18n } = useTranslation();
     const { eggSales } = useEggSaleStore();
     const { pickups } = usePickupStore();
 
-    const roles = user.data.roles[0];
+    const toggleShowDlg = (open: boolean) => setShowDlg(open);
+    const toggleShowPickupDlg = (open: boolean) => setShowPickupDlg(open);
+    const toggleShowCustomerDlg = (open: boolean) => setShowCustomerDlg(open);
+    
+
+    
 
     // const setTotalCratesData = totalCratesData(pickups);
 
@@ -133,7 +139,7 @@ const Ponte = () => {
     
     const totalNumberOfEggsRemain = totalQuantityEggsRemain % eggsInCrate;
 
-    const { t, i18n } = useTranslation();
+    
 
     useEffect(() => {
         console.log("Current language:", i18n.language);
@@ -216,7 +222,7 @@ const Ponte = () => {
                                             onClick={handleCustomerDialogToggle}
                                         >
                                             <Plus size={20} />
-                                            <span>{t("egg_customer")}</span>
+                                            <span>{t("customer_newCustomer")}</span>
                                         </button>
                                         <button
                                             className="flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 text-md"
@@ -232,7 +238,7 @@ const Ponte = () => {
                             <div className="space-y-5">
                                 <div className="flex space-x-2 dark:text-gray-400">
                                     <BadgeDollarSign />
-                                    <span>{t("egg_recentTransaction")}</span>
+                                    <span>{t("recentTransaction")}</span>
                                 </div>
                                 <EggSaleTable eggsaleData={eggSales} />
                             </div>
@@ -300,5 +306,3 @@ const Ponte = () => {
 
 Ponte.layout = (page: ReactNode) => <Dashboard>{page}</Dashboard>;
 export default Ponte;
-
-

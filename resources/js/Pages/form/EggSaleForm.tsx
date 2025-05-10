@@ -221,9 +221,9 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                         <div className='w-full'>
                             <Button className='w-full bg-orange-600' type="submit" disabled={processing}>Save</Button>
                         </div>
-                        <div className='w-full'>
+                        {/* <div className='w-full'>
                             <Button className='w-full bg-orange-600' type="button" onClick={() => toggleDlg(false)}>Cancel</Button>
-                        </div>
+                        </div> */}
                     </div>
                 </form>
             </DialogContent>

@@ -45,8 +45,8 @@ const AppSidebar = () => {
                                 {(roles === 'Admin' || roles === 'Supervisor') && (
                                     <>
                                         <Link className="hover:bg-orange-50 dark:hover:bg-slate-900 p-2 rounded-lg flex space-x-5 items-center cursor-pointer nav-link" href="/Treatment/index"><BriefcaseMedical className="text-orange-600"  size={20} /><h1 className='text-base font-semibold'>{t("treatment")}</h1></Link>
-                                        <Link className="hover:bg-orange-50 dark:hover:bg-slate-900 p-2 rounded-lg flex space-x-5 items-center cursor-pointer nav-link" href="/Consomation/index"><Blocks className="text-orange-600"  size={20} /><h1 className='text-base font-semibold'>{t("feeding")}</h1></Link>
-                                        <Link className="hover:bg-orange-50 dark:hover:bg-slate-900 p-2 rounded-lg flex space-x-5 items-center cursor-pointer nav-link" href="/Admin/index"><Settings className="text-orange-600"  size={20} /><h1 className='text-base font-semibold'>Admin</h1></Link>
+                                        <Link className="hover:bg-orange-50 dark:hover:bg-slate-900 p-2 rounded-lg flex space-x-5 items-center cursor-pointer nav-link" href="/Consomation/index"><Blocks className="text-orange-600"  size={20} /><h1 className='text-base font-semibold'>{t("food")}</h1></Link>
+                                        <Link className="hover:bg-orange-50 dark:hover:bg-slate-900 p-2 rounded-lg flex space-x-5 items-center cursor-pointer nav-link" href="/Admin/index"><Settings className="text-orange-600"  size={20} /><h1 className='text-base font-semibold'>{t("admin")}</h1></Link>
                                     </>
                                 )}
                                 
