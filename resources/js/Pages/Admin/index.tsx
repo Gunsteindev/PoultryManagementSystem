@@ -23,6 +23,9 @@ import CustomerTable from '../table/CustomerTable';
 import SupplierTable from '../table/SupplierTable';
 import TransferTable from '../table/TransferTable';
 import axios from 'axios';
+import UserTable from '../table/UserTable';
+import { useUserStore } from '@/lib/Stores/UserStore';
+import UserForm from '../form/UserForm';
 
 type ResultType = {
     code: string;
@@ -64,6 +67,7 @@ const Home = ({selectedData}: HomeProp) => {
     const { batiments } = useBatimentStore();
     const { transfers, addTransfer } = useTransferStore();
     const { bandPurchases } = useBandPurchaseStore();
+    const { users } = useUserStore();
 
     const { t, i18n } = useTranslation();
 
@@ -87,12 +91,9 @@ const Home = ({selectedData}: HomeProp) => {
 
 
 
-    const toggleShowDlg = (open: boolean) => {
-        // title.current = "EDIT PRODUCT"
-        setShowDlg(open);
-    };
+    const toggleShowDlg = (open: boolean) => setShowDlg(open);
 
-    const handleDialogToggle = (e: React.MouseEvent) => {
+    const handleDialogToggle: (e: React.MouseEvent<HTMLButtonElement>) => void = (e) => {
         e.stopPropagation(); // Stop event propagation
         toggleShowDlg(true); // Open the dialog (you can pass 'false' to close it)
     };
@@ -171,11 +172,11 @@ const Home = ({selectedData}: HomeProp) => {
 
     return (
         <>
-            <div className="w-full p-10 mx-auto space-y-8">
+            <div className="w-full h-full p-5 mx-auto space-y-8">
                 <div className='flex justify-between items-center'>
                     <div><h1 className='text-2xl font-semibold'>{t("admin")}</h1></div>
                 </div>
-                <div className="overflow-y-auto scrollbar-hidden space-y-8">
+                <div className="overflow-hidden scrollbar-hidden space-y-8">
                     {/* Tab Buttons */}
                     <div className="flex justify-between bg-white dark:bg-slate-800">
                         <button
@@ -278,9 +279,21 @@ const Home = ({selectedData}: HomeProp) => {
                             
                         )}
                         {activeTab === "tab3" && 
-                            <div>
-                                {/* <FoodTable foodData={foods}/> */}
-                            </div>
+                            <>
+                                <div className=''>
+                                    <button 
+                                        className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
+                                        onClick={handleDialogToggle}
+                                    >
+                                        <Plus size={20} />
+                                        <span>{t("user_newUser")}</span>
+                                    </button>
+                                    {showDlg && <UserForm showDlg={showDlg} toggleDlg={toggleShowDlg} />}
+                                </div>
+                                <div>
+                                    <UserTable userData={users}/>
+                                </div>
+                            </>
                         }
                         {activeTab === "tab4" && 
                             <div className='space-y-5'>
@@ -370,7 +383,6 @@ const Home = ({selectedData}: HomeProp) => {
                     </div>
                 </div>
             </div>
-
         </>
     )
 }

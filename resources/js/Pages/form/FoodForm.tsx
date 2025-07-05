@@ -113,13 +113,13 @@ const FoodForm = ({ showDlg, toggleDlg, title, selectedData}: FoodFormProp) => {
    
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[32vw] xl:max-h-[70vh]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
                     <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600"><h1>{formTitle}</h1></DialogTitle>
                 </DialogHeader>
                 <form onSubmit={submit} className='text-base'>
                     <div className="space-y-3">
-                        <div className='xl:flex xl:space-x-10'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                             <FormComponent
                                 name="food_code"
                                 fieldType={FormFieldType.INPUT}
@@ -146,8 +146,6 @@ const FoodForm = ({ showDlg, toggleDlg, title, selectedData}: FoodFormProp) => {
                                     </SelectItem>
                                 ))}
                             </FormComponent>
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="food_name"
                                 fieldType={FormFieldType.INPUT}
@@ -166,8 +164,6 @@ const FoodForm = ({ showDlg, toggleDlg, title, selectedData}: FoodFormProp) => {
                                 onChange={(e) => setData("food_purchase_date", e.target.value)}
                                 error={errorMessage == "food_purchase_date is required" ? errorMessage : errors.food_purchase_date}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="food_price_per_bag"
                                 fieldType={FormFieldType.NUMBER}
@@ -186,8 +182,6 @@ const FoodForm = ({ showDlg, toggleDlg, title, selectedData}: FoodFormProp) => {
                                 onChange={(e) => setData("food_quantity", e.target.value)}
                                 error={errorMessage == "food_quantity is required" ? errorMessage : errors.food_quantity}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="food_discount"
                                 fieldType={FormFieldType.NUMBER}

@@ -4,6 +4,12 @@ import { Input } from "@/Components/ui/input";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from 'date-fns';
+import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/Components/ui/calendar";
+import * as LucideIcons from "lucide-react";
+import { Button } from "@/components/ui/button"
+import { Calendar as CalendarIcon, ChevronDownIcon  } from "lucide-react"
 
 export enum FormFieldType {
     INPUT = "input",
@@ -18,28 +24,44 @@ export enum FormFieldType {
 
 type FormFieldTypeKey = typeof FormFieldType[keyof typeof FormFieldType];
 
-interface CustomFormFieldProps {
+interface FormFieldProps {
     name: string;
     fieldType: FormFieldType;
-    label: string;
+    label?: string;
     placeholder?: string;
-    value: string | number | boolean | null;
-    onChange: (value: any) => void;
+    value?: string | number | boolean | null;
+    onChange: (value: any) => void; // This will receive the date directly
     error?: string;
     dateFormat?: string;
     showTimeSelect?: boolean;
     children?: React.ReactNode;
+    // Adapt these to accept Inertia's useForm properties
+    watch?: Record<string, any>; // Instead of ReturnType<typeof useForm>["watch"]
+    setValue?: (name: string, value: any, options?: { shouldValidate?: boolean, shouldDirty?: boolean }) => void; // Inertia's setData signature
 }
 
-const renderField = (field: CustomFormFieldProps) => {
-    const { name, fieldType, placeholder, value, onChange, children, error, dateFormat, showTimeSelect } = field;
+const renderField = (field: FormFieldProps) => {
+    const { name, fieldType, placeholder, value, onChange, children, watch, setValue, error, dateFormat, showTimeSelect } = field;
     
     const handleSelectChange = (newValue: string) => {
         // console.log('Selected value:', newValue);
         onChange({ target: { name, value: newValue } });
     };
 
+    const [open, setOpen] = React.useState(false)
+    const [date, setDate] = React.useState<Date | undefined>(undefined)
+
     console.log(placeholder);
+
+    // const Icon = field.icon
+    // ? (LucideIcons[field.icon] as React.FC<{ size?: number }>)
+    // : null;
+
+    // const commonProps = {
+    //     id: field.name,
+    //     className: cn(Icon && "pl-10"),
+    //     ...register(field.name, { required: field.required }),
+    // };
 
     switch (fieldType) {
         case FormFieldType.INPUT:
@@ -50,10 +72,11 @@ const renderField = (field: CustomFormFieldProps) => {
                     placeholder={placeholder}
                     value={(value as string) || ""}
                     onChange={onChange}
-                    className="rounded-md xl:w-[14vw] dark:border-gray-400"
+                    className="rounded-md w-full max-w-md dark:border-gray-400"
                 />
             );
         case FormFieldType.DATE_PICKER:
+            const selectedDate = value ? new Date(value as string) : undefined;
             return (
                 // <DatePicker
                 //     selected={value ? new Date(value as string) : null}
@@ -70,9 +93,35 @@ const renderField = (field: CustomFormFieldProps) => {
                         onChange({ target: { name, value: formattedDate } });
                     }}
                     dateFormat={dateFormat || "MM-dd-yyyy"}
-                    showTimeSelect={showTimeSelect || false}
-                    className="rounded-md xl:w-[14vw] h-[3vh] dark:border-gray-400 dark:bg-transparent"
+                    showTimeSelect={!!showTimeSelect}
+                    className="rounded-md w-full max-w-md h-aou dark:border-gray-400 dark:bg-transparent"
                 />
+
+                // <Popover open={open} onOpenChange={setOpen}>
+                //     <PopoverTrigger asChild>
+                //         <Button
+                //             variant="outline"
+                //             id="date"
+                //             className="w-48 justify-between font-normal"
+                //         >
+                //             {selectedDate ? format(selectedDate, dateFormat || "PPP") : "Select date"}
+                //             <CalendarIcon className="ml-2 h-4 w-4 opacity-50" />
+                //         </Button>
+                //     </PopoverTrigger>
+                //     <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                //         <Calendar
+                //             mode="single"
+                //             selected={selectedDate}
+                //             onSelect={(date) => {
+                //                 // When a date is selected, call the onChange prop with the date
+                //                 onChange(date); // Directly pass the date object
+                //                 setOpen(false);
+                //             }}
+                //             initialFocus
+                //             captionLayout="dropdown"
+                //         />
+                //     </PopoverContent>
+                // </Popover>
             );
         case FormFieldType.NUMBER:
             return (
@@ -82,7 +131,7 @@ const renderField = (field: CustomFormFieldProps) => {
                     placeholder={placeholder}
                     value={(value as number) || ""}
                     onChange={onChange}
-                    className="rounded-md xl:w-[14vw] dark:border-gray-400"
+                    className="rounded-md w-full max-w-md dark:border-gray-400"
                 />
             );
         case FormFieldType.PHONE_INPUT:
@@ -93,7 +142,7 @@ const renderField = (field: CustomFormFieldProps) => {
                     placeholder={placeholder}
                     value={(value as string) || ""}
                     onChange={onChange}
-                    className="rounded-md xl:w-[14vw]"
+                    className="rounded-md w-full max-w-md dark:border-gray-400"
                 />
             );
         case FormFieldType.TEXTAREA:
@@ -103,7 +152,7 @@ const renderField = (field: CustomFormFieldProps) => {
                     placeholder={placeholder}
                     value={(value as string) || ""}
                     onChange={onChange}
-                    className="rounded-md xl:w-[14vw] dark:border-gray-400 bg-transparent"
+                    className="rounded-md w-full max-w-md dark:border-gray-400 bg-transparent"
                 />
             );
         case FormFieldType.CHECKBOX:
@@ -113,13 +162,13 @@ const renderField = (field: CustomFormFieldProps) => {
                     name={name}
                     checked={(value as boolean) || false}
                     onChange={onChange}
-                    className="form-checkbox"
+                    className="rounded-md w-full max-w-md dark:border-gray-400"
                 />
             );
         case FormFieldType.SELECT:
             return (
                 <Select value={value as string} onValueChange={handleSelectChange}>
-                    <SelectTrigger className="rounded-md xl:w-[14vw] dark:border-gray-400 bg-transparent">
+                    <SelectTrigger className="rounded-md w-full max-w-md dark:border-gray-400 bg-transparent">
                     <SelectValue placeholder={placeholder}>
                             {value ? value : placeholder}
                         </SelectValue>
@@ -132,7 +181,7 @@ const renderField = (field: CustomFormFieldProps) => {
     }
 };
 
-const FormComponent: React.FC<CustomFormFieldProps> = (props) => {
+const FormComponent: React.FC<FormFieldProps> = (props) => {
     const { name, label, error } = props;
 
     return (

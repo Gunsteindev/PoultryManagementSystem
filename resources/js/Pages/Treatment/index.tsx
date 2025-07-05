@@ -27,7 +27,7 @@ const Traitement = () => {
 
     return (
         <>
-            <div className='p-10 space-y-20'>
+            <div className='p-5 space-y-20'>
                 <div className='flex justify-between items-center'>
                     <div><h1 className='text-2xl font-semibold '>{t("treatment")}</h1></div>
                 </div>
@@ -35,7 +35,7 @@ const Traitement = () => {
                     <div className='flex space-x-5'>
                         <div className=''>
                             <button 
-                                className='flex item-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md' 
+                                className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
                                 onClick={handleDialogToggle}
                             >
                                 <Plus size={20} />

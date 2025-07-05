@@ -1,7 +1,7 @@
 {
     "welcome": "Bienvenue",
     "language": "Langue",
-    "home": "Accueil",
+    "home": "Tableau de bord",
     "egg": "Ponte",
     "bird": "Volaille",
     "treatment": "Traitement",
@@ -223,7 +223,13 @@
     "transfer_form_updateTransfer": "Mettre à jour le transfert",
     "transfer_form_roomCode": "Salle",
     "transfer_form_bandCode": "Bande",
-    "transfer_form_transferQuantity": "Quantité"
+    "transfer_form_transferQuantity": "Quantité",
+
+    "user_newUser": "Nouvel utilisateur",
+    "user_tableHeader_userName": "Nom",
+    "user_tableHeader_userEmail": "Email",
+    "user_tableHeader_userPassword": "Mot de passe",
+    "user_tableHeader_userRole": "Rôle"
     
 }
   

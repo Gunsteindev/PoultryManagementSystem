@@ -117,13 +117,13 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
    
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[32vw] xl:max-h-[60vh]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
                     <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600"><h1>{formTitle}</h1></DialogTitle>
                 </DialogHeader>
                 <form onSubmit={submit} className='text-base'>
                     <div className="space-y-3">
-                        <div className='xl:flex xl:space-x-10'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                             <FormComponent
                                 name="bird_sale_code"
                                 fieldType={FormFieldType.INPUT}
@@ -142,8 +142,6 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
                                 onChange={(e) => setData("bird_sale_date", e.target.value)}
                                 error={errorMessage == "bird_sale_date is required" ? errorMessage : errors.bird_sale_date}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="bird_sale_batiment_code"
                                 fieldType={FormFieldType.SELECT}
@@ -170,8 +168,6 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
                                 onChange={(e) => setData("bird_sale_description", e.target.value)}
                                 error={errorMessage == "bird_sale_description is required" ? errorMessage : errors.bird_sale_description}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="bird_sale_unit_price"
                                 fieldType={FormFieldType.NUMBER}
@@ -190,8 +186,6 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
                                 onChange={(e) => setData("bird_sale_quantity", e.target.value)}
                                 error={errorMessage == "bird_sale_quantity is required" ? errorMessage : errors.bird_sale_quantity}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="bird_sale_reduction"
                                 fieldType={FormFieldType.NUMBER}

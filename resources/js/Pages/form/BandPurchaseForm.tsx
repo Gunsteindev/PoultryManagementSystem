@@ -112,7 +112,7 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
 
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[32vw] xl:max-h-[60vh]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
                     <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600">
                         <h1>{formTitle}</h1>
@@ -120,7 +120,7 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                 </DialogHeader>
                 <form onSubmit={submit} className="text-base">
                     <div className="space-y-3">
-                        <div className="xl:flex xl:space-x-10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormComponent
                                 name="band_purchase_code"
                                 fieldType={FormFieldType.INPUT}
@@ -139,8 +139,6 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                                 onChange={(e) => setData("band_purchase_date", e.target.value)}
                                 error={errorMessage == "band_purchase_date is required" ? errorMessage : errors.band_purchase_date}
                             />
-                        </div>
-                        <div className="xl:flex xl:space-x-10">
                             <FormComponent
                                 name="band_purchase_band_code"
                                 fieldType={FormFieldType.INPUT}
@@ -159,8 +157,6 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                                 onChange={(e) => setData("band_purchase_description", e.target.value)}
                                 error={errorMessage == "band_purchase_description is required" ? errorMessage : errors.band_purchase_description}
                             />
-                        </div>
-                        <div className="xl:flex xl:space-x-10">
                             <FormComponent
                                 name="band_purchase_unit_price"
                                 fieldType={FormFieldType.NUMBER}
@@ -179,8 +175,6 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                                 onChange={(e) => setData("band_purchase_quantity", e.target.value)}
                                 error={errorMessage == "band_purchase_quantity is required" ? errorMessage : errors.band_purchase_quantity}
                             />
-                        </div>
-                        <div className="xl:flex xl:space-x-10">
                             <FormComponent
                                 name="band_purchase_reduction"
                                 fieldType={FormFieldType.NUMBER}

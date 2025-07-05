@@ -86,7 +86,7 @@ const BirdComponent = () => {
 
     return (
         <>
-            <div className="w-full p-10 mx-auto space-y-8">
+            <div className="w-full p-5 mx-auto space-y-8">
                 <div className='flex justify-between items-center'>
                     <div><h1 className='text-2xl font-semibold'>{t("bird")}</h1></div>
                 </div>
@@ -124,7 +124,7 @@ const BirdComponent = () => {
                 </div>
                 <div className="h-[65vh] overflow-y-auto scrollbar-hidden space-y-8">
                     {/* Tab Buttons */}
-                    <div className="flex justify-between bg-white dark:bg-slate-800">
+                    <div className="flex justify-between bg-white dark:bg-slate-800 rounded-md">
                         {(roles === 'Admin' || roles === 'Commercial' || roles === 'Supervisor') && (
                             <>
                                 <button
@@ -141,7 +141,7 @@ const BirdComponent = () => {
                                     className={`flex-1 py-2 text-center font-bold rounded-md ${
                                         activeTab === "tab2"
                                         ? "bg-orange-500 text-white"
-                                        : "text-gray-500 border-x"
+                                        : "text-gray-500"
                                     }`}
                                     onClick={() => handleTabClick("tab2")}
                                 >
@@ -183,7 +183,7 @@ const BirdComponent = () => {
                                                         </div>
                                                         <div className=''>
                                                             <button 
-                                                                className='flex item-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border' 
+                                                                className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
                                                                 onClick={handleDialogToggle}
                                                             >
                                                                 <Plus size={20} />
@@ -211,7 +211,7 @@ const BirdComponent = () => {
                                                     <>
                                                         <div className=''>
                                                             <button
-                                                                className="flex items-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border"
+                                                                className="flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black"
                                                                 onClick={handleCustomerAndSupplierDialogToggle}
                                                             >
                                                                 <Plus size={20} />
@@ -223,7 +223,7 @@ const BirdComponent = () => {
                                                 
                                                 <div className=''>
                                                     <button 
-                                                        className='flex item-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border' 
+                                                        className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
                                                         onClick={handleVenteDialogToggle}
                                                     >
                                                         <Plus size={20} />
@@ -251,7 +251,7 @@ const BirdComponent = () => {
                                     <div className='flex space-x-5'>
                                         <div className=''>
                                             <button 
-                                                className='flex item-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border' 
+                                                className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
                                                 onClick={handlePerteDialogToggle}
                                             >
                                                 <Plus size={20} />

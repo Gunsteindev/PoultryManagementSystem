@@ -12,6 +12,7 @@ import { EggSaleProp } from "../table/EggSaleTable";
 import { useClientStore } from "@/lib/Stores/customerStore";
 import { useEggSaleStore } from "@/lib/Stores/eggSaleStore";
 import { useTranslation } from "react-i18next";
+import { format } from 'date-fns';
 
 interface FormData {
     eggsale_code: string,
@@ -122,13 +123,13 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
    
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[32vw] xl:max-h-[60vh]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
                     <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600"><h1>{formTitle}</h1></DialogTitle>
                 </DialogHeader>
                 <form onSubmit={submit} className='text-base'>
                     <div className="space-y-3">
-                        <div className='xl:flex xl:space-x-10'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                             <FormComponent
                                 name="eggsale_code"
                                 fieldType={FormFieldType.INPUT}
@@ -147,8 +148,6 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                                 onChange={(e) => setData("eggsale_date", e.target.value)}
                                 error={errorMessage == "eggsale_date is required" ? errorMessage : errors.eggsale_date}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="eggsale_client_name"
                                 fieldType={FormFieldType.SELECT}
@@ -175,8 +174,6 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                                 onChange={(e) => setData("eggsale_description", e.target.value)}
                                 error={errorMessage == "eggsale_description is required" ? errorMessage : errors.eggsale_description}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="eggsale_unit_price"
                                 fieldType={FormFieldType.NUMBER}
@@ -195,8 +192,6 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
                                 onChange={(e) => setData("eggsale_quantity", e.target.value)}
                                 error={errorMessage == "eggsale_quantity is required" ? errorMessage : errors.eggsale_quantity}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="eggsale_reduction"
                                 fieldType={FormFieldType.NUMBER}
@@ -232,4 +227,148 @@ const EggSaleForm = ({ showDlg, toggleDlg, title, selectedData}: EggSaleFormProp
 }
 
 export default EggSaleForm
+
+
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle
+// } from "@/Components/ui/dialog";
+// import { Button } from "@/components/ui/button";
+// import { useForm, SubmitHandler } from "react-hook-form";
+// import { Form } from "@/Components/ui/form"; // Your wrapper
+// // import CustomFormField, { FormFieldType } from "@/Components/ui/formComponent";
+// import { SelectItem } from "@/Components/ui/select";
+// import { usePage } from "@inertiajs/react";
+// import { useToast } from "@/Components/hooks/use-toast";
+// import { EggSaleProp } from "../table/EggSaleTable";
+// import { useClientStore } from "@/lib/Stores/customerStore";
+// import { useEggSaleStore } from "@/lib/Stores/eggSaleStore";
+// import { useTranslation } from "react-i18next";
+// import CustomFormField, { FormFieldType } from "@/Components/ui/customFormField";
+// import DynamicFormField, { FieldProps } from "@/Components/ui/dynamicFormField";
+
+
+// interface EggSaleFormInputs {
+//   eggsale_code: string;
+//   eggsale_description: string;
+//   eggsale_unit_price: string;
+//   eggsale_quantity: string;
+//   eggsale_reduction: string;
+//   eggsale_total_cost: string;
+//   eggsale_client_name: string;
+//   eggsale_date: any;
+//   user_id: any;
+// }
+
+// interface EggSaleFormProp {
+//   showDlg: boolean;
+//   toggleDlg: (open: boolean) => void;
+//   title?: string;
+//   selectedData?: EggSaleProp | null;
+// }
+
+// interface ParentFormWrapperProps {
+//   fields: FieldProps[];
+//   defaultValues?: Record<string, unknown>;
+// }
+
+// const EggSaleForm = ({
+//   showDlg,
+//   toggleDlg,
+//   title,
+//   selectedData,
+// }: EggSaleFormProp) => {
+//   const { t } = useTranslation();
+//   const user = usePage().props.auth.user;
+//   const { toast } = useToast();
+//   const { clients } = useClientStore();
+//   const { addEggSale, updateEggSale } = useEggSaleStore();
+
+//   const isEditMode = !!selectedData;
+//   const formTitle =
+//     title || (isEditMode ? t("egg_form_eggsale_updateSale") : t("egg_sale"));
+
+//   const form = useForm<EggSaleFormInputs>({
+//     defaultValues: {
+//       eggsale_code: selectedData?.eggsale_code || "",
+//       eggsale_description: selectedData?.eggsale_description || "",
+//       eggsale_unit_price: selectedData?.eggsale_unit_price || "",
+//       eggsale_quantity: selectedData?.eggsale_quantity || "",
+//       eggsale_reduction: selectedData?.eggsale_reduction || "",
+//       eggsale_total_cost: selectedData?.eggsale_total_cost || "",
+//       eggsale_client_name: selectedData?.eggsale_client_name || "",
+//       eggsale_date: selectedData?.eggsale_date || "",
+//       user_id: user.data.id
+//     }
+//   });
+
+//   const watch = form.watch;
+
+//   const unitPrice = Number(watch("eggsale_unit_price") || "0");
+//   const quantity = Number(watch("eggsale_quantity") || "0");
+//   const reduction = Number(watch("eggsale_reduction") || "0");
+//   const totalCost = (unitPrice * quantity - reduction).toString();
+//   form.setValue("eggsale_total_cost", totalCost);
+
+//   const onSubmit: SubmitHandler<EggSaleFormInputs> = (data) => {
+//     if (isEditMode) {
+//       updateEggSale(selectedData?.eggsale_id, data);
+//       toast({ description: "Egg Sale updated successfully." });
+//     } else {
+//       addEggSale(data);
+//       toast({ description: "Egg Sale created successfully." });
+//     }
+//     toggleDlg(false);
+//   };
+
+//   const fields:FieldProps[] = [
+//   { name: "eggsale_code", label: "Sale code", type: "text", required: true },
+//   { name: "eggsale_description", label: "Description", type: "text", required: true },
+//   { name: "eggsale_unit_price", label: "Unit price", type: "text" },
+//   { name: "eggsale_quantity", label: "Quantity", type: "number" },
+//   { name: "eggsale_reduction", label: "Reduction", type: "number", required: true },
+//   { name: "eggsale_total_cost", label: "Total cost", type: "number" },
+//   { name: "eggsale_client_name", label: "Client", type: "image" },
+//   { name: "eggsale_date", label: "Gender", type: "select", options: ["Male", "Female"] },
+// ];
+
+//   return (
+//     <Dialog open={showDlg} onOpenChange={toggleDlg}>
+//       <DialogContent className="dark:bg-slate-800">
+//         <DialogHeader className="mb-5">
+//           <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600">
+//             <h1>{formTitle}</h1>
+//           </DialogTitle>
+//         </DialogHeader>
+
+//         <Form {...form}>
+//           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            
+
+//       		<DynamicFormField
+// 			fields={fields}
+// 			register={form.register}
+// 			setValue={form.setValue}
+// 			watch={form.watch}
+// 			control={form.control}
+// 			errors={form.formState.errors}
+// 			/>
+
+
+//             <div className="sm:col-span-2">
+//                 <Button type="submit" className="w-full">
+//                     Submit
+//                 </Button>
+//             </div>
+//           </form>
+//         </Form>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// };
+
+// export default EggSaleForm;
+
 

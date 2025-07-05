@@ -116,17 +116,16 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    {/* <InputLabel
+                    <InputLabel
                         htmlFor="role"
                         value="Role"
                         className='dark:text-white'
-                    /> */}
+                    />
                     {/* <label htmlFor="role">Role</label> */}
 
                     <FormComponent
                         name="role"
                         fieldType={FormFieldType.SELECT}
-                        label="Role"
                         placeholder=""
                         value={data.role}
                         onChange={(e) => setData("role", e.target.value)}

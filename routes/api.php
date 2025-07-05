@@ -12,7 +12,8 @@ use App\Http\Controllers\Api\{
     SupplierController,
     TransferController,
     TreatmentController,
-    BirdLossController
+    BirdLossController,
+    UserController
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::apiResource('foodPurchase', FoodController::class);
 Route::apiResource('consomation', ConsomationController::class);
 Route::apiResource('transfer', TransferController::class);
 Route::apiResource('birdloss', BirdLossController::class);
+Route::apiResource('users', UserController::class);
 
 
 Route::get('/user', function (Request $request) {

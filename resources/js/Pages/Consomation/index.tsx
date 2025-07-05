@@ -44,13 +44,13 @@ const Feeding = () => {
 
     return (
         <>
-            <div className="w-full p-10 mx-auto space-y-8">
+            <div className="w-full p-5 mx-auto space-y-8">
                 <div className='flex justify-between items-center'>
                     <div><h1 className='text-2xl font-semibold'>{t("food")}</h1></div>
                 </div>
                 <div className=" overflow-y-auto scrollbar-hidden space-y-8">
                     {/* Tab Buttons */}
-                    <div className="flex justify-between bg-white dark:bg-slate-800">
+                    <div className="flex justify-between bg-white dark:bg-slate-800 rounded-md">
                         <button
                             className={`flex-1 py-2 text-center font-bold rounded-md ${
                                 activeTab === "tab1"
@@ -80,7 +80,7 @@ const Feeding = () => {
                                 <div className='flex space-x-10'>
                                     <div className=''>
                                         <button 
-                                            className='flex item-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border' 
+                                            className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
                                             onClick={handleDialogToggle}
                                         >
                                             <Plus size={20} />
@@ -101,7 +101,7 @@ const Feeding = () => {
                                 <div className='flex space-x-10'>
                                     <div className=''>
                                         <button 
-                                            className='flex item-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border' 
+                                            className='flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black' 
                                             onClick={handleConsomationDialogToggle}
                                         >
                                             <Plus size={20} />
@@ -119,7 +119,6 @@ const Feeding = () => {
                     </div>
                 </div>
             </div>
-
         </>
     )
 }

@@ -114,7 +114,7 @@ const TreatmentForm = ({ showDlg, toggleDlg, title, selectedData}: TreatmentForm
    
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[16vw]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
                     <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600"><h1>{formTitle}</h1></DialogTitle>
                 </DialogHeader>

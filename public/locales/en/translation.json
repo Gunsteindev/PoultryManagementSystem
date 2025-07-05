@@ -1,7 +1,7 @@
 {
     "welcome": "Welcome",
     "language": "Language",
-    "home": "Home",
+    "home": "Dashboard",
     "egg": "Egg",
     "bird": "Bird",
     "treatment": "Treatment",
@@ -223,6 +223,13 @@
     "transfer_form_updateTransfer": "Update Transfer",
     "transfer_form_roomCode": "Room",
     "transfer_form_bandCode": "Band",
-    "transfer_form_transferQuantity": "Quantity"
+    "transfer_form_transferQuantity": "Quantity",
+
+    "user_newUser": "New User",
+    "user_tableHeader_userName": "Name",
+    "user_tableHeader_userEmail": "Email",
+    "user_tableHeader_userPassword": "Password",
+    "user_tableHeader_userRole": "Role"
+    
 
 }
