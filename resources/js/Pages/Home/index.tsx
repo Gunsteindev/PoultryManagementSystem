@@ -5,6 +5,7 @@ import Dashboard from '../Dashboard';
 import { TrendingUp } from 'lucide-react'
 import { useBandPurchaseStore } from '@/lib/Stores/bandPurchaseStore';
 import { usePickupStore } from '@/lib/Stores/pickupStore';
+import { useEggSaleStore } from '@/lib/Stores/eggSaleStore';
 import { useBirdSaleStore } from '@/lib/Stores/birdSaleStore';
 import { totalBirdCost, totalBird, totalBirdSale, totalCratesData } from '@/lib/utils';
 import { useTranslation } from "react-i18next";
@@ -75,32 +76,69 @@ const chartConfig1 = {
   },
 } satisfies ChartConfig
 
-const chartData2 = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
-const chartConfig2 = {
+
+const chartConfig_eggSale = {
   desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
+    label: "Egg Sale",
+    color: "#f97316",
+  },
+} satisfies ChartConfig
+
+const chartConfig_pickup = {
+  pickups: {
+    label: "Pickups",
+    color: "#f97316",
   },
 } satisfies ChartConfig
 
 
 const Home = () => {
 
+    const { t, i18n } = useTranslation();
     // const { bandPurchases } = useBandPurchaseStore();
-    // const { pickups } = usePickupStore();
+    const { pickups } = usePickupStore();
+    const { eggSales } = useEggSaleStore();
     // const { birdSales } = useBirdSaleStore();
 
     // const setTotalBirdCost = totalBirdCost(bandPurchases)
     // const setTotalBird = totalBird(bandPurchases)
     // const setTotalBirdSale = totalBirdSale(birdSales)
     // const setTotalCratesData = totalCratesData(pickups)
+
+    const eggSaleChart: { date: string | Date; quantity: string | number }[] = []
+    eggSales.map(e => eggSaleChart.push({date: e.eggsale_date, quantity: e.eggsale_total_cost}))
+
+    const sumByMonth_eggSaleChart: Record<number, number> = {};
+
+    // Step 1: Sum totals by month index
+    eggSaleChart.forEach(({ date, quantity }) => {
+        const dt = typeof date === 'string' ? new Date(date) : date;
+        const monthIndex = dt.getMonth(); // 0 = January
+
+        if (!sumByMonth_eggSaleChart[monthIndex]) {
+            sumByMonth_eggSaleChart[monthIndex] = 0;
+        }
+
+        sumByMonth_eggSaleChart[monthIndex] += Number(quantity);
+    });
+
+    // Step 2: Format results with month names and sort ascending
+    const eggSaleChart_Result = Object.entries(sumByMonth_eggSaleChart).map(([monthIndexStr, total]) => {
+        const monthIndex = Number(monthIndexStr);
+        const monthName = new Date(0, monthIndex).toLocaleString('en-US', {
+        month: 'long',
+        });
+
+        return { month: monthName, total };
+    }).sort((a, b) =>
+        new Date(`2000 ${a.month}`).getMonth() - new Date(`2000 ${b.month}`).getMonth()
+    );
+
+    console.log(eggSaleChart_Result);
+
+
+    const pickupChart: { date: string | Date; quantity: string | number }[] = []
+    pickups.map(e => pickupChart.push({date: e.pickup_date, quantity: e.pickup_total_quantity}))
 
     const [activeChart, setActiveChart] = useState<keyof typeof chartConfig1>("desktop")
     const total = useMemo(
@@ -111,9 +149,54 @@ const Home = () => {
         []
     )
 
-    const { t, i18n } = useTranslation();
+    
+
+    const sumByMonth_pickupChart: Record<string, number> = {};
+
+    pickupChart.forEach(({ date, quantity }) => {
+        const strDate = typeof date === 'string' ? date : date.toLocaleDateString('en-US');
+        const [month, , year] = strDate.split('-'); // assuming MM-DD-YYYY
+        const key = `${year}-${month}`; // e.g., "2025-05"
+
+        if (!sumByMonth_pickupChart[key]) {
+            sumByMonth_pickupChart[key] = 0;
+        }
+
+        sumByMonth_pickupChart[key] += Number(quantity);
+    });
+
+    // Convert to array with only month name
+    const resultArray = Object.entries(sumByMonth_pickupChart).map(([key, total]) => {
+        const [year, month] = key.split('-');
+        const date = new Date(Number(year), Number(month) - 1);
+        const monthName = date.toLocaleString('en-US', { month: 'long' });
+        const monthIndex = date.getMonth(); // 0 = Jan, 1 = Feb, etc.
+
+        return {
+            month: monthName,
+            total,
+            monthIndex,
+        };
+    });
+
+    // Sort by month index (ascending order)
+    const sortedResult = resultArray.sort((a, b) => a.monthIndex - b.monthIndex);
+
+    // Remove monthIndex if not needed
+    // const finalResult = sortedResult.map(({ month, total }) => ({ month, total }));
+
+    // console.log(finalResult);
+
+    
+    console.log("pickups:", pickups)
+    console.log("pickupChart:", pickupChart)
+    console.log("sumByMonth:", sumByMonth_pickupChart);
+    console.log("resultArray:", resultArray);
 
     useEffect(() => {
+        // console.log("pickups:", pickups)
+        // console.log("pickupChart:", pickupChart)
+        // console.log("sumByMonth:", sumByMonth);
         console.log("Current language:", i18n.language);
         console.log("Loaded translations:", i18n.options.backend && typeof i18n.options.backend === 'object' && 'loadPath' in i18n.options.backend ? i18n.options.backend.loadPath : "Backend options not available");
     }, []);
@@ -129,7 +212,7 @@ const Home = () => {
 
 
     return (
-        <>
+        <div className='w-full p-5 mx-auto space-y-4'>
             <Card className="py-0">
                 <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
                     <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
@@ -202,21 +285,21 @@ const Home = () => {
                             />
                         }
                         />
-                        <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+                        <Bar dataKey={activeChart} fill='#f97316' />
                     </BarChart>
                     </ChartContainer>
                 </CardContent>
             </Card>
 
-            <div>
+            <div className='flex space-x-4'>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Bar Chart</CardTitle>
-                        <CardDescription>January - June 2024</CardDescription>
+                        <CardTitle>Egg Sale</CardTitle>
+                        <CardDescription>2025</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <ChartContainer config={chartConfig2}>
-                            <BarChart accessibilityLayer data={chartData2}>
+                        <ChartContainer config={chartConfig_eggSale}>
+                            <BarChart accessibilityLayer data={eggSaleChart_Result}>
                                 <CartesianGrid vertical={false} />
                                 <XAxis
                                     dataKey="month"
@@ -229,22 +312,56 @@ const Home = () => {
                                     cursor={false}
                                     content={<ChartTooltipContent hideLabel />}
                                 />
-                                <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+                                <Bar dataKey="total" fill="#f97316" radius={8} />
                             </BarChart>
                         </ChartContainer>
                     </CardContent>
                     <CardFooter className="flex-col items-start gap-2 text-sm">
-                        <div className="flex gap-2 leading-none font-medium">
+                        {/* <div className="flex gap-2 leading-none font-medium">
                             Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-                        </div>
+                        </div> */}
                         <div className="text-muted-foreground leading-none">
-                            Showing total visitors for the last 6 months
+                            Showing total egg sold for the year 2025
+                        </div>
+                    </CardFooter>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Egg Production</CardTitle>
+                        <CardDescription>2025</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ChartContainer config={chartConfig_pickup}>
+                            <BarChart accessibilityLayer data={resultArray}>
+                                <CartesianGrid vertical={false} />
+                                <XAxis
+                                    dataKey="month"
+                                    tickLine={false}
+                                    tickMargin={10}
+                                    axisLine={false}
+                                    tickFormatter={(value) => value.slice(0, 3)}
+                                />
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={<ChartTooltipContent hideLabel />}
+                                />
+                                <Bar dataKey="total" fill="#f97316" radius={8} />
+                            </BarChart>
+                        </ChartContainer>
+                    </CardContent>
+                    <CardFooter className="flex-col items-start gap-2 text-sm">
+                        {/* <div className="flex gap-2 leading-none font-medium">
+                            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                        </div> */}
+                        <div className="text-muted-foreground leading-none">
+                            Showing total egg production for the year 2025
                         </div>
                     </CardFooter>
                 </Card>
             </div>
 
-        </>
+        </div>
     )
 }
 
