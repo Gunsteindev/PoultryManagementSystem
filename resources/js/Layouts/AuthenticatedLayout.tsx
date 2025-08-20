@@ -8,14 +8,14 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu"
+} from "@/Components/components/ui/dropdown-menu"
 
 import { useTheme } from "next-themes"
-import { SidebarProvider, SidebarTrigger } from "@/Components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger } from "@/Components/components/ui/sidebar"
 import AppSidebar  from "../Layouts/AppSidebar"
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/Components/components/ui/avatar"
 import GB from 'country-flag-icons/react/3x2/GB'
 import FR from 'country-flag-icons/react/3x2/FR'
 

@@ -7,10 +7,10 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "@/Components/components/ui/alert-dialog";
 import { TriangleAlert } from "lucide-react";
-import { Separator } from "@/Components/ui/separator";
-import { useToast } from '@/Components/hooks/use-toast';
+import { Separator } from "@/Components/components/ui/separator";
+import { useToast } from '@/Components/components/hooks/use-toast';
 import { useClientStore } from "@/lib/Stores/customerStore";
 import { useSupplierStore } from "@/lib/Stores/supplierStore";
 import { useFoodStore } from "@/lib/Stores/foodStore";

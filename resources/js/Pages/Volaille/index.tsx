@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { useBandPurchaseStore } from '@/lib/Stores/bandPurchaseStore';
 import { useBirdSaleStore } from '@/lib/Stores/birdSaleStore';
 import { usePage } from '@inertiajs/react';
-import { Card, CardHeader, CardDescription, CardTitle } from '@/Components/ui/card';
+import { Card, CardHeader, CardDescription, CardTitle } from '@/Components/components/ui/card';
 import { useBirdLossStore } from '@/lib/Stores/BirdLossStore';
 import { useTranslation } from "react-i18next";
 import SupplierForm from '../form/SupplierForm';

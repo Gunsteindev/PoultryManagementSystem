@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { ReactNode } from "react";
 import { useTheme } from "next-themes"
-import { Toaster } from "@/Components/ui/toaster"
+import { Toaster } from "@/Components/components/ui/toaster"
 
 interface BaseLayoutProp {
     children: ReactNode

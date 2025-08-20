@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, BadgeDollarSign } from 'lucide-react';
 import { ReactNode } from 'react';
 import ProductForm from '@/Pages/form/ProductForm';
-import { Card, CardHeader, CardDescription, CardTitle } from '@/Components/ui/card';
+import { Card, CardHeader, CardDescription, CardTitle } from '@/Components/components/ui/card';
 import Dashboard from '../Dashboard';
 import PickupTable from '../table/PickupTable';
 import EggSaleTable from '../table/EggSaleTable';

@@ -2,13 +2,13 @@
 import { ReactNode } from "react";
 import { Link } from "@inertiajs/react";
 import { FileChartPie, Moon, Sun, BriefcaseMedical, Bird, Egg, Ellipsis, UsersRound, House, Layers3, TicketCheck, HandCoins, Blocks, LayoutDashboard } from 'lucide-react'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/Components/ui/select';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/Components/components/ui/select';
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/Components/ui/accordion"
+} from "@/Components/components/ui/accordion"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,12 +16,12 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu"
+} from "@/Components/components/ui/dropdown-menu"
 
 import { useTheme, ThemeProvider } from "next-themes"
-import { SidebarProvider, SidebarTrigger } from "@/Components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger } from "@/Components/components/ui/sidebar"
 import AppSidebar  from "./AppSidebar"
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/components/ui/button";
   
 interface BaseLayoutProp {
     children: ReactNode

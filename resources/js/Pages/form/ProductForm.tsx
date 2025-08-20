@@ -1,12 +1,12 @@
-import {  Sheet,  SheetContent,  SheetHeader,  SheetTitle } from "@/Components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import FormComponent from "@/Components/ui/formComponent";
+import {  Sheet,  SheetContent,  SheetHeader,  SheetTitle } from "@/Components/components/ui/sheet";
+import { Button } from "@/Components/components/ui/button";
+import FormComponent from "@/Components/components/ui/formComponent";
 import { useForm } from "@inertiajs/react";
 import { FormEventHandler, useState } from "react";
-import { FormFieldType } from "@/Components/ui/formComponent";
+import { FormFieldType } from "@/Components/components/ui/formComponent";
 import { usePage } from '@inertiajs/react';
-import { useToast } from '@/Components/hooks/use-toast';
-import { SelectItem } from "@/Components/ui/select";
+import { useToast } from '@/Components/components/hooks/use-toast';
+import { SelectItem } from "@/Components/components/ui/select";
 import axios from "axios";
 import { PickupProp } from "../table/PickupTable";
 import { usePickupStore } from "@/lib/Stores/pickupStore";

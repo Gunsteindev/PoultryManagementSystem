@@ -4,20 +4,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
+} from "@/Components/components/ui/form";
+import { Input } from "@/Components/components/ui/input";
 import React from "react";
 import { Control, UseFormWatch, UseFormSetValue } from "react-hook-form";
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 import { E164Number } from 'libphonenumber-js';
-import { Textarea } from "@/Components/ui/textarea";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Select, SelectTrigger, SelectValue, SelectContent } from '@/Components/ui/select';
+import { Textarea } from "@/Components/components/ui/textarea";
+import { Checkbox } from "@/Components/components/ui/checkbox";
+import { Select, SelectTrigger, SelectValue, SelectContent } from '@/Components/components/ui/select';
 import { format } from 'date-fns';
-import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/Components/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Calendar } from "@/Components/ui/calendar";
+import { Calendar } from "@/Components/components/ui/calendar";
 
 export enum FormFieldType {
   INPUT = "input",

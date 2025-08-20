@@ -1,5 +1,5 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog"
-import { Separator } from "@/Components/ui/separator"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog"
+import { Separator } from "@/Components/components/ui/separator"
 
 interface ProductDialogProp {
     showDlg: boolean,

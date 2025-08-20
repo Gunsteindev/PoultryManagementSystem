@@ -1,12 +1,12 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog"
 import { useForm } from '@inertiajs/react';
-import FormComponent from '@/Components/ui/formComponent';
+import FormComponent from '@/Components/components/ui/formComponent';
 import { FormEventHandler, useState } from 'react';
-import { FormFieldType } from '@/Components/ui/formComponent';
-import { Button } from "@/components/ui/button";
+import { FormFieldType } from '@/Components/components/ui/formComponent';
+import { Button } from "@/Components/components/ui/button";
 import { usePage } from '@inertiajs/react';
-import { useToast } from '@/Components/hooks/use-toast';
-import { SelectItem } from "@/Components/ui/select";
+import { useToast } from '@/Components/components/hooks/use-toast';
+import { SelectItem } from "@/Components/components/ui/select";
 import axios from "axios";
 import { FoodProp } from "../table/FoodTable";
 import { useFoodStore } from "@/lib/Stores/foodStore";

@@ -1,15 +1,16 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog"
+import { Button } from "@/Components/components/ui/button"
 import { useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { FormFieldType } from '@/Components/ui/formComponent';
-import { useToast } from '@/Components/hooks/use-toast';
-import { SelectItem } from "@/Components/ui/select"
+import { FormFieldType } from '@/Components/components/ui/formComponent';
+import { useToast } from '@/Components/components/hooks/use-toast';
+import { SelectItem } from "@/Components/components/ui/select"
 import { useBatimentStore } from "@/lib/Stores/batimentStore";
 import { BirdLossProp } from "../table/BirdLossTable";
 import { useBirdLossStore } from "@/lib/Stores/BirdLossStore";
-import FormComponent from '@/Components/ui/formComponent';
-import axios from "axios"
+import FormComponent from '@/Components/components/ui/formComponent';
+import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 
 
@@ -32,10 +33,13 @@ interface BirdLossFormProp {
 
 const BirdLossForm = ({ showDlg, toggleDlg, title, selectedData}: BirdLossFormProp) => {
     const user = usePage().props.auth.user;
+    const { t, i18n } = useTranslation();
+
+
     const { toast } = useToast();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const isEditMode = !!selectedData; // Determine mode based on selectedData presence
-    const formTitle = title || (isEditMode ? "UPDATE BIRD LOSS" : "NEW BIRD LOSS");
+    const formTitle = title || (isEditMode ? t("bird_form_birdLoss_updateLoss") : t("bird_form_birdLoss_newLoss"));
     const { addBirdLoss, updateBirdLoss } = useBirdLossStore();
     const { batiments } = useBatimentStore();
 
@@ -114,7 +118,7 @@ const BirdLossForm = ({ showDlg, toggleDlg, title, selectedData}: BirdLossFormPr
                         <FormComponent
                             name="bird_loss_batiment"
                             fieldType={FormFieldType.SELECT}
-                            label="Batiment"
+                            label={t("bird_form_birdLoss_roomCode")}
                             placeholder=""
                             value={data.bird_loss_batiment}
                             onChange={(e) => setData("bird_loss_batiment", e.target.value)}
@@ -131,7 +135,7 @@ const BirdLossForm = ({ showDlg, toggleDlg, title, selectedData}: BirdLossFormPr
                         <FormComponent
                             name="bird_loss_category"
                             fieldType={FormFieldType.INPUT}
-                            label="Description"
+                            label={t("bird_form_birdLoss_description")}
                             placeholder=""
                             value={data.bird_loss_category}
                             onChange={(e) => setData("bird_loss_category", e.target.value)}
@@ -140,7 +144,7 @@ const BirdLossForm = ({ showDlg, toggleDlg, title, selectedData}: BirdLossFormPr
                         <FormComponent
                             name="bird_loss_quantity"
                             fieldType={FormFieldType.NUMBER}
-                            label="Quantity"
+                            label={t("bird_form_birdLoss_quantity")}
                             placeholder=""
                             value={data.bird_loss_quantity}
                             onChange={(e) => setData("bird_loss_quantity", e.target.value)}
@@ -149,7 +153,7 @@ const BirdLossForm = ({ showDlg, toggleDlg, title, selectedData}: BirdLossFormPr
                         <FormComponent
                             name="bird_loss_date"
                             fieldType={FormFieldType.DATE_PICKER}
-                            label="Date"
+                            label={t("bird_form_birdLoss_date")}
                             placeholder=""
                             value={data.bird_loss_date}
                             onChange={(e) => setData("bird_loss_date", e.target.value)}

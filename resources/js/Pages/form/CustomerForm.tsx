@@ -1,14 +1,15 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog";
 import { useForm } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import FormComponent from "@/Components/ui/formComponent";
-import { FormFieldType } from "@/Components/ui/formComponent";
+import { Button } from "@/Components/components/ui/button";
+import FormComponent from "@/Components/components/ui/formComponent";
+import { FormFieldType } from "@/Components/components/ui/formComponent";
 import { FormEventHandler, useEffect, useState } from "react";
 import { usePage } from '@inertiajs/react';
-import { useToast } from '@/Components/hooks/use-toast';
+import { useToast } from '@/Components/components/hooks/use-toast';
 import axios from "axios";
 import { ClientProp } from "../table/CustomerTable";
 import { useClientStore } from "@/lib/Stores/customerStore";
+import { useTranslation } from "react-i18next";
 
 
 interface FormData {
@@ -33,9 +34,12 @@ interface CustomerFormProp {
 
 const CustomerForm = ({ showDlg, toggleDlg, title, selectedData, userId }: CustomerFormProp) => {
     const user = usePage().props.auth.user;
+    const { t, i18n } = useTranslation();
+
+
     const isEditMode = !!selectedData; // Determine mode based on selectedData presence
     const { toast } = useToast();
-    const formTitle = title || (isEditMode ? "UPDATE CLIENT" : "NOUVEAU CLIENT");
+    const formTitle = title || (isEditMode ? t("customer_form_updateCustomer") : t("customer_form_newCustomer"));
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const { clients, addClient, updateClient} = useClientStore();
 
@@ -126,7 +130,7 @@ const CustomerForm = ({ showDlg, toggleDlg, title, selectedData, userId }: Custo
                             <FormComponent
                                 name="client_name"
                                 fieldType={FormFieldType.INPUT}
-                                label="Nom"
+                                label={t("customer_form_customerName")}
                                 placeholder=""
                                 value={data.client_name}
                                 onChange={(e) => setData("client_name", e.target.value)}
@@ -135,7 +139,7 @@ const CustomerForm = ({ showDlg, toggleDlg, title, selectedData, userId }: Custo
                             <FormComponent
                                 name="client_company"
                                 fieldType={FormFieldType.INPUT}
-                                label="Company"
+                                label={t("customer_form_customerCompany")}
                                 placeholder=""
                                 value={data.client_company}
                                 onChange={(e) => setData("client_company", e.target.value)}
@@ -144,7 +148,7 @@ const CustomerForm = ({ showDlg, toggleDlg, title, selectedData, userId }: Custo
                             <FormComponent
                                 name="client_telephone"
                                 fieldType={FormFieldType.INPUT}
-                                label="Telephone"
+                                label={t("customer_form_customerMobile")}
                                 placeholder=""
                                 value={data.client_telephone}
                                 onChange={(e) => setData("client_telephone", e.target.value)}
@@ -153,7 +157,7 @@ const CustomerForm = ({ showDlg, toggleDlg, title, selectedData, userId }: Custo
                             <FormComponent
                                 name="client_email"
                                 fieldType={FormFieldType.INPUT}
-                                label="Email"
+                                label={t("customer_form_customerEmail")}
                                 placeholder=""
                                 value={data.client_email}
                                 onChange={(e) => setData("client_email", e.target.value)}
@@ -162,7 +166,7 @@ const CustomerForm = ({ showDlg, toggleDlg, title, selectedData, userId }: Custo
                             <FormComponent
                                 name="client_position"
                                 fieldType={FormFieldType.INPUT}
-                                label="Position"
+                                label={t("customer_form_customerPosition")}
                                 placeholder=""
                                 value={data.client_position}
                                 onChange={(e) => setData("client_position", e.target.value)}
@@ -171,7 +175,7 @@ const CustomerForm = ({ showDlg, toggleDlg, title, selectedData, userId }: Custo
                             <FormComponent
                                 name="client_location"
                                 fieldType={FormFieldType.INPUT}
-                                label="Location"
+                                label={t("customer_form_customerAddress")}
                                 placeholder=""
                                 value={data.client_location}
                                 onChange={(e) => setData("client_location", e.target.value)}

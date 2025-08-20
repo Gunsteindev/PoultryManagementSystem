@@ -1,12 +1,12 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog"
+import { Button } from "@/Components/components/ui/button"
 import { useForm } from '@inertiajs/react';
-import FormComponent from '@/Components/ui/formComponent';
+import FormComponent from '@/Components/components/ui/formComponent';
 import { FormEventHandler, useState } from 'react';
-import { FormFieldType } from '@/Components/ui/formComponent';
-import { SelectItem } from '@/Components/ui/select';
+import { FormFieldType } from '@/Components/components/ui/formComponent';
+import { SelectItem } from '@/Components/components/ui/select';
 import { usePage } from '@inertiajs/react';
-import { useToast } from '@/Components/hooks/use-toast';
+import { useToast } from '@/Components/components/hooks/use-toast';
 import axios from "axios"
 import { EggSaleProp } from "../table/EggSaleTable";
 import { useClientStore } from "@/lib/Stores/customerStore";

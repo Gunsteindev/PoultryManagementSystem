@@ -7,7 +7,7 @@ import {
     SidebarGroupLabel,
     SidebarGroupContent,
     SidebarMenu,
-} from "@/Components/ui/sidebar"
+} from "@/Components/components/ui/sidebar"
 import { Link, usePage } from "@inertiajs/react";
 import { BriefcaseMedical, Bird, Egg, Blocks, LayoutDashboard, Settings } from 'lucide-react'
 import { useEffect } from "react";

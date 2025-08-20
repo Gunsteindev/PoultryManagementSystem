@@ -1,17 +1,18 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog"
+import { Button } from "@/Components/components/ui/button"
 import { useForm } from '@inertiajs/react';
-import FormComponent from '@/Components/ui/formComponent';
+import FormComponent from '@/Components/components/ui/formComponent';
 import { FormEventHandler, useState } from 'react';
-import { FormFieldType } from '@/Components/ui/formComponent';
+import { FormFieldType } from '@/Components/components/ui/formComponent';
 import { usePage } from '@inertiajs/react';
-import { useToast } from '@/Components/hooks/use-toast';
-import { SelectItem } from "@/Components/ui/select";
+import { useToast } from '@/Components/components/hooks/use-toast';
+import { SelectItem } from "@/Components/components/ui/select";
 import axios from "axios";
 import { ConsomationProp } from "../table/ConsomationTable";
 import { useConsomationStore } from "@/lib/Stores/consomationStore";
 import { useBatimentStore } from "@/lib/Stores/batimentStore";
 import { useFoodStore } from "@/lib/Stores/foodStore";
+import { useTranslation } from "react-i18next";
 
 
 interface FormData {
@@ -34,9 +35,12 @@ interface ConsomationFormProp {
 
 const ConsomationForm = ({ showDlg, toggleDlg, title, selectedData}: ConsomationFormProp) => {
     const user = usePage().props.auth.user;
+    const { t, i18n } = useTranslation();
+
+
     const isEditMode = !!selectedData; // Determine mode based on selectedData presence
     const { toast } = useToast();
-    const formTitle = title || (isEditMode ? "UPDATE CONSOMMATION" : "NOUVEAU CONSOMMATION");
+    const formTitle = title || (isEditMode ? t("food_form_feeding_updateFeeding") : t("food_form_feeding_newFeeding"));
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const { addConsomation, updateConsomation } = useConsomationStore();
     const { batiments } = useBatimentStore();
@@ -115,7 +119,7 @@ const ConsomationForm = ({ showDlg, toggleDlg, title, selectedData}: Consomation
                             <FormComponent
                                 name="consomation_batiment"
                                 fieldType={FormFieldType.SELECT}
-                                label="Batiment"
+                                label={t("food_form_feeding_roomCode")}
                                 placeholder=""
                                 value={data.consomation_batiment}
                                 onChange={(e) => setData("consomation_batiment", e.target.value)}
@@ -132,7 +136,7 @@ const ConsomationForm = ({ showDlg, toggleDlg, title, selectedData}: Consomation
                             <FormComponent
                                 name="consomation_name"
                                 fieldType={FormFieldType.SELECT}
-                                label="Nom"
+                                label={t("food_form_feeding_feedingName")}
                                 placeholder=""
                                 value={data.consomation_name}
                                 onChange={(e) => setData("consomation_name", e.target.value)}
@@ -149,7 +153,7 @@ const ConsomationForm = ({ showDlg, toggleDlg, title, selectedData}: Consomation
                             <FormComponent
                                 name="consomation_quantity"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Quantity"
+                                label={t("food_form_feeding_quantity")}
                                 placeholder=""
                                 value={data.consomation_quantity}
                                 onChange={(e) => setData("consomation_quantity", e.target.value)}
@@ -158,7 +162,7 @@ const ConsomationForm = ({ showDlg, toggleDlg, title, selectedData}: Consomation
                             <FormComponent
                                 name="consomation_date"
                                 fieldType={FormFieldType.DATE_PICKER}
-                                label="Date"
+                                label={t("food_form_feeding_date")}
                                 placeholder=""
                                 value={data.consomation_date}
                                 onChange={(e) => setData("consomation_date", e.target.value)}
