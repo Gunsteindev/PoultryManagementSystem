@@ -1,11 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog"
+import { Button } from "@/Components/components/ui/button"
 import { useForm } from '@inertiajs/react';
-import FormComponent from '@/Components/ui/formComponent';
+import FormComponent from '@/Components/components/ui/formComponent';
 import { FormEventHandler, useState } from 'react';
-import { FormFieldType } from '@/Components/ui/formComponent';
+import { FormFieldType } from '@/Components/components/ui/formComponent';
 import { usePage } from '@inertiajs/react';
-import { useToast } from '@/Components/hooks/use-toast';
+import { useToast } from '@/Components/components/hooks/use-toast';
 import axios from "axios"
 import { SupplierProp } from "../table/SupplierTable";
 import { useSupplierStore } from "@/lib/Stores/supplierStore";
@@ -106,13 +106,16 @@ const SupplierForm = ({ showDlg, toggleDlg, selectedData, title}: SupplierFormPr
    
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[32vw] xl:max-h-[60vh]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
-                    <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600"><h1>{formTitle}</h1></DialogTitle>
+                    <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600">
+                        <h1>{formTitle}</h1>
+                    </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={submit} className='text-base'>
-                    <div className="space-y-3">
-                        <div className='xl:flex xl:space-x-10'>
+
+                <form onSubmit={submit} className="text-base">
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormComponent
                                 name="supplier_name"
                                 fieldType={FormFieldType.INPUT}
@@ -120,7 +123,11 @@ const SupplierForm = ({ showDlg, toggleDlg, selectedData, title}: SupplierFormPr
                                 placeholder=""
                                 value={data.supplier_name}
                                 onChange={(e) => setData("supplier_name", e.target.value)}
-                                error={errorMessage == "supplier_name is required" ? errorMessage : errors.supplier_name}
+                                error={
+                                errorMessage === "supplier_name is required"
+                                    ? errorMessage
+                                    : errors.supplier_name
+                                }
                             />
                             <FormComponent
                                 name="supplier_company"
@@ -129,10 +136,12 @@ const SupplierForm = ({ showDlg, toggleDlg, selectedData, title}: SupplierFormPr
                                 placeholder=""
                                 value={data.supplier_company}
                                 onChange={(e) => setData("supplier_company", e.target.value)}
-                                error={errorMessage == "supplier_company is required" ? errorMessage : errors.supplier_company}
+                                error={
+                                errorMessage === "supplier_company is required"
+                                    ? errorMessage
+                                    : errors.supplier_company
+                                }
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="supplier_role"
                                 fieldType={FormFieldType.INPUT}
@@ -140,7 +149,11 @@ const SupplierForm = ({ showDlg, toggleDlg, selectedData, title}: SupplierFormPr
                                 placeholder=""
                                 value={data.supplier_role}
                                 onChange={(e) => setData("supplier_role", e.target.value)}
-                                error={errorMessage == "supplier_role is required" ? errorMessage : errors.supplier_role}
+                                error={
+                                errorMessage === "supplier_role is required"
+                                    ? errorMessage
+                                    : errors.supplier_role
+                                }
                             />
                             <FormComponent
                                 name="supplier_position"
@@ -149,10 +162,12 @@ const SupplierForm = ({ showDlg, toggleDlg, selectedData, title}: SupplierFormPr
                                 placeholder=""
                                 value={data.supplier_position}
                                 onChange={(e) => setData("supplier_position", e.target.value)}
-                                error={errorMessage == "supplier_position is required" ? errorMessage : errors.supplier_position}
+                                error={
+                                errorMessage === "supplier_position is required"
+                                    ? errorMessage
+                                    : errors.supplier_position
+                                }
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="supplier_telephone"
                                 fieldType={FormFieldType.INPUT}
@@ -160,7 +175,11 @@ const SupplierForm = ({ showDlg, toggleDlg, selectedData, title}: SupplierFormPr
                                 placeholder=""
                                 value={data.supplier_telephone}
                                 onChange={(e) => setData("supplier_telephone", e.target.value)}
-                                error={errorMessage == "supplier_telephone is required" ? errorMessage : errors.supplier_telephone}
+                                error={
+                                errorMessage === "supplier_telephone is required"
+                                    ? errorMessage
+                                    : errors.supplier_telephone
+                                }
                             />
                             <FormComponent
                                 name="supplier_address"
@@ -169,21 +188,37 @@ const SupplierForm = ({ showDlg, toggleDlg, selectedData, title}: SupplierFormPr
                                 placeholder=""
                                 value={data.supplier_address}
                                 onChange={(e) => setData("supplier_address", e.target.value)}
-                                error={errorMessage == "supplier_address is required" ? errorMessage : errors.supplier_address}
+                                error={
+                                errorMessage === "supplier_address is required"
+                                    ? errorMessage
+                                    : errors.supplier_address
+                                }
                             />
                         </div>
-                    </div>
-                    <div className='flex gap-x-4 mt-10'>
-                        <div className='w-full'>
-                            <Button className='w-full bg-orange-600' type="submit" disabled={processing}>Save</Button>
+
+                        <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                            <Button
+                                className="w-full bg-orange-600"
+                                type="submit"
+                                disabled={processing}
+                            >
+                                Save
+                            </Button>
+                            {/* 
+                            <Button
+                                className="w-full bg-gray-500"
+                                type="button"
+                                onClick={() => toggleDlg(false)}
+                            >
+                                Cancel
+                            </Button> 
+                            */}
                         </div>
-                        {/* <div className='w-full'>
-                            <Button className='w-full bg-orange-600' type="button" onClick={() => toggleDlg(false)}>Cancel</Button>
-                        </div> */}
                     </div>
                 </form>
             </DialogContent>
         </Dialog>
+
     )
 }
 

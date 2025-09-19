@@ -1,16 +1,16 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog"
+import { Button } from "@/Components/components/ui/button"
 import { useForm, usePage } from '@inertiajs/react';
-import FormComponent from '@/Components/ui/formComponent';
+import FormComponent from '@/Components/components/ui/formComponent';
 import { FormEventHandler, useState } from 'react';
-import { FormFieldType } from '@/Components/ui/formComponent';
-import { useToast } from '@/Components/hooks/use-toast';
-import { SelectItem } from "@/Components/ui/select"
+import { FormFieldType } from '@/Components/components/ui/formComponent';
+import { useToast } from '@/Components/components/hooks/use-toast';
+import { SelectItem } from "@/Components/components/ui/select"
 import axios from "axios"
 import { BirdSaleProp } from "../table/BirdSaleTable";
 import { useBirdSaleStore } from "@/lib/Stores/birdSaleStore";
 import { useBatimentStore } from "@/lib/Stores/batimentStore";
-
+import { useTranslation } from "react-i18next";
 
 interface FormData {
     bird_sale_batiment_code: string;
@@ -36,10 +36,13 @@ interface BirdSaleFormProp {
 
 const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormProp) => {
     const user = usePage().props.auth.user;
+    const { t, i18n } = useTranslation();
+
+
     const { toast } = useToast();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const isEditMode = !!selectedData; // Determine mode based on selectedData presence
-    const formTitle = title || (isEditMode ? "UPDATE VENTE" : "NOUVEAU VENTE");
+    const formTitle = title || (isEditMode ? t("bird_form_birdSale_updateSale") : t("bird_form_birdSale_newSale"));
     const { addBirdSale, updateBirdSale } = useBirdSaleStore();
     const { batiments } = useBatimentStore();
 
@@ -117,17 +120,17 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
    
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[32vw] xl:max-h-[60vh]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
                     <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600"><h1>{formTitle}</h1></DialogTitle>
                 </DialogHeader>
                 <form onSubmit={submit} className='text-base'>
                     <div className="space-y-3">
-                        <div className='xl:flex xl:space-x-10'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                             <FormComponent
                                 name="bird_sale_code"
                                 fieldType={FormFieldType.INPUT}
-                                label="Code"
+                                label={t("bird_form_birdSale_saleCode")}
                                 placeholder=""
                                 value={data.bird_sale_code}
                                 onChange={(e) => setData("bird_sale_code", e.target.value)}
@@ -136,18 +139,16 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
                             <FormComponent
                                 name="bird_sale_date"
                                 fieldType={FormFieldType.DATE_PICKER}
-                                label="Date"
+                                label={t("bird_form_birdSale_date")}
                                 placeholder=""
                                 value={data.bird_sale_date}
                                 onChange={(e) => setData("bird_sale_date", e.target.value)}
                                 error={errorMessage == "bird_sale_date is required" ? errorMessage : errors.bird_sale_date}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="bird_sale_batiment_code"
                                 fieldType={FormFieldType.SELECT}
-                                label="Batiment"
+                                label={t("bird_form_birdSale_roomCode")}
                                 placeholder=""
                                 value={data.bird_sale_batiment_code}
                                 onChange={(e) => setData("bird_sale_batiment_code", e.target.value)}
@@ -164,18 +165,16 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
                             <FormComponent
                                 name="bird_sale_description"
                                 fieldType={FormFieldType.INPUT}
-                                label="Description"
+                                label={t("bird_form_birdSale_description")}
                                 placeholder=""
                                 value={data.bird_sale_description}
                                 onChange={(e) => setData("bird_sale_description", e.target.value)}
                                 error={errorMessage == "bird_sale_description is required" ? errorMessage : errors.bird_sale_description}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="bird_sale_unit_price"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Prix Unitaire (CFA)"
+                                label={t("bird_form_birdSale_unitPrice")}
                                 placeholder=""
                                 value={data.bird_sale_unit_price}
                                 onChange={(e) => setData("bird_sale_unit_price", e.target.value)}
@@ -184,18 +183,16 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
                             <FormComponent
                                 name="bird_sale_quantity"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Quantity"
+                                label={t("bird_form_birdSale_quantity")}
                                 placeholder=""
                                 value={data.bird_sale_quantity}
                                 onChange={(e) => setData("bird_sale_quantity", e.target.value)}
                                 error={errorMessage == "bird_sale_quantity is required" ? errorMessage : errors.bird_sale_quantity}
                             />
-                        </div>
-                        <div className='xl:flex xl:space-x-10'>
                             <FormComponent
                                 name="bird_sale_reduction"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Reduction (CFA)"
+                                label={t("bird_form_birdSale_reduction")}
                                 placeholder=""
                                 value={data.bird_sale_reduction}
                                 onChange={(e) => setData("bird_sale_reduction", e.target.value)}
@@ -204,7 +201,7 @@ const BirdSaleForm = ({ showDlg, toggleDlg, title, selectedData}: BirdSaleFormPr
                             <FormComponent
                                 name="bird_sale_total_cost"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Total"
+                                label={t("bird_form_birdSale_totalPrice")}
                                 placeholder=""
                                 value={data.bird_sale_total_cost = (Number(data.bird_sale_unit_price) * Number(data.bird_sale_quantity) - Number(data.bird_sale_reduction)).toString()}
                                 onChange={(e) => setData("bird_sale_total_cost", e.target.value)}

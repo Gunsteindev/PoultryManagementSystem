@@ -1,13 +1,14 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog";
 import { useForm, usePage } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import FormComponent from "@/Components/ui/formComponent";
-import { FormFieldType } from "@/Components/ui/formComponent";
+import { Button } from "@/Components/components/ui/button";
+import FormComponent from "@/Components/components/ui/formComponent";
+import { FormFieldType } from "@/Components/components/ui/formComponent";
 import { FormEventHandler, useEffect, useState } from "react";
-import { useToast } from '@/Components/hooks/use-toast';
+import { useToast } from '@/Components/components/hooks/use-toast';
 import axios from "axios";
 import { BatimentProp } from "../table/BatimentTable";
 import { useBatimentStore } from "@/lib/Stores/batimentStore";
+import { useTranslation } from "react-i18next";
 
 
 interface FormData {
@@ -29,10 +30,13 @@ interface BatimentFormProp {
 
 const BatimentForm = ({ showDlg, toggleDlg, title, selectedData }: BatimentFormProp) => {
     const user = usePage().props.auth.user;
+    const { t, i18n } = useTranslation();
+
+
     const { toast } = useToast();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const isEditMode = !!selectedData; // Determine mode based on selectedData presence
-    const formTitle = title || (isEditMode ? "UPDATE BATIMENT" : "NOUVEAU BATIMENT");
+    const formTitle = title || (isEditMode ? t("room_form_updateRoom") : t("room_form_newRoom"));
     const { addBatiment, updateBatiment } = useBatimentStore();
 
     const validateForm = (data: FormData) => {
@@ -104,7 +108,7 @@ const BatimentForm = ({ showDlg, toggleDlg, title, selectedData }: BatimentFormP
 
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[16vw]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
                     <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600">
                         <h1>{formTitle}</h1>
@@ -115,7 +119,7 @@ const BatimentForm = ({ showDlg, toggleDlg, title, selectedData }: BatimentFormP
                         <FormComponent
                             name="batiment_code"
                             fieldType={FormFieldType.INPUT}
-                            label="Code Batiment"
+                            label={t("room_form_roomCode")}
                             placeholder=""
                             value={data.batiment_code}
                             onChange={(e) => setData("batiment_code", e.target.value)}
@@ -124,7 +128,7 @@ const BatimentForm = ({ showDlg, toggleDlg, title, selectedData }: BatimentFormP
                         <FormComponent
                             name="batiment_capacity"
                             fieldType={FormFieldType.NUMBER}
-                            label="Capacite"
+                            label={t("room_form_roomCapacity")}
                             placeholder=""
                             value={data.batiment_capacity}
                             onChange={(e) => setData("batiment_capacity", e.target.value)}
@@ -133,7 +137,7 @@ const BatimentForm = ({ showDlg, toggleDlg, title, selectedData }: BatimentFormP
                         <FormComponent
                             name="batiment_category"
                             fieldType={FormFieldType.INPUT}
-                            label="Category"
+                            label={t("room_form_roomCategory")}
                             placeholder=""
                             value={data.batiment_category}
                             onChange={(e) => setData("batiment_category", e.target.value)}
@@ -142,7 +146,7 @@ const BatimentForm = ({ showDlg, toggleDlg, title, selectedData }: BatimentFormP
                         <FormComponent
                             name="batiment_description"
                             fieldType={FormFieldType.TEXTAREA}
-                            label="Description"
+                            label={t("room_form_roomDescription")}
                             placeholder=""
                             value={data.batiment_description}
                             onChange={(e) => setData("batiment_description", e.target.value)}

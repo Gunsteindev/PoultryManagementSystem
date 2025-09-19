@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, BadgeDollarSign } from 'lucide-react';
 import { ReactNode } from 'react';
 import ProductForm from '@/Pages/form/ProductForm';
-import { Card, CardHeader, CardDescription, CardTitle } from '@/Components/ui/card';
+import { Card, CardHeader, CardDescription, CardTitle } from '@/Components/components/ui/card';
 import Dashboard from '../Dashboard';
 import PickupTable from '../table/PickupTable';
 import EggSaleTable from '../table/EggSaleTable';
@@ -32,7 +32,7 @@ const Ponte = () => {
 
     const toggleShowDlg = (open: boolean) => setShowDlg(open);
     const toggleShowPickupDlg = (open: boolean) => setShowPickupDlg(open);
-    const toggleShowCustomerDlg = (open: boolean) => setShowCustomerDlg(open);
+    const toggleShowCustomerDlg: (open: boolean) => void = (open) => setShowCustomerDlg(open);
     
 
     
@@ -145,9 +145,13 @@ const Ponte = () => {
         console.log("Current language:", i18n.language);
         console.log("Loaded translations:", i18n.options.backend && typeof i18n.options.backend === 'object' && 'loadPath' in i18n.options.backend ? i18n.options.backend.loadPath : "Backend options not available");
     }, []);
+
+    const { addEggSale, updateEggSale } = useEggSaleStore();
+
+    
     
     return (
-        <div className="w-full p-10 mx-auto space-y-8">
+        <div className="w-full p-5 mx-auto space-y-8">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-semibold">{t("egg")}</h1>
             </div>
@@ -283,7 +287,7 @@ const Ponte = () => {
                                 {(roles === 'Admin' || 'Production') && (
                                     <>
                                         <button
-                                            className="flex items-center space-x-3 bg-white px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black border"
+                                            className="flex items-center space-x-3 bg-white hover:bg-orange-100 dark:hover:bg-slate-600 rounded-md px-4 py-2 dark:bg-slate-800 dark:text-white text-md text-black"
                                             onClick={handlePickupDialogToggle}
                                         >
                                             <Plus size={20} />

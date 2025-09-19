@@ -1,13 +1,15 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/components/ui/dialog";
+import { Button } from "@/Components/components/ui/button";
 import { useForm, usePage } from "@inertiajs/react";
-import FormComponent from "@/Components/ui/formComponent";
-import { FormEventHandler, useState } from "react";
-import { FormFieldType } from "@/Components/ui/formComponent";
-import { useToast } from '@/Components/hooks/use-toast';
+import FormComponent from "@/Components/components/ui/formComponent";
+import { FormEventHandler, useEffect, useState } from "react";
+import { FormFieldType } from "@/Components/components/ui/formComponent";
+import { useToast } from '@/Components/components/hooks/use-toast';
 import { BandPurchaseProp } from '../table/BandPurchaseTable';
 import axios from "axios";
 import { useBandPurchaseStore } from "@/lib/Stores/bandPurchaseStore";
+import { useTranslation } from "react-i18next";
+
 
 
 interface FormData {
@@ -34,10 +36,12 @@ interface BandPurchaseFormProp {
 
 const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurchaseFormProp) => {
     const user = usePage().props.auth.user;
+    const { t, i18n } = useTranslation();
+
     const { toast } = useToast();
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
     const isEditMode = !!selectedData; // Determine mode based on selectedData presence
-    const formTitle = title || (isEditMode ? "UPDATE ACHAT" : "NOUVEAU ACHAT");
+    const formTitle = title || (isEditMode ? t("bird_form_bandpurchase_updatePurchase") : t("bird_form_bandpurchase_newPurchase"));
     const { addBandPurchase, updateBandPurchase } = useBandPurchaseStore();
 
     console.log("11", selectedData?.band_id)
@@ -110,9 +114,14 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
         }
     };
 
+    useEffect(() => {
+        console.log("Current language:", i18n.language);
+        console.log("Loaded translations:", i18n.options.backend && typeof i18n.options.backend === 'object' && 'loadPath' in i18n.options.backend ? i18n.options.backend.loadPath : "Backend options not available");
+    }, []);
+
     return (
         <Dialog open={showDlg} onOpenChange={toggleDlg}>
-            <DialogContent className="dark:bg-slate-800 xl:max-w-[32vw] xl:max-h-[60vh]">
+            <DialogContent className="dark:bg-slate-800">
                 <DialogHeader className="mb-5">
                     <DialogTitle className="flex space-x-2 text-lg font-bold text-orange-600">
                         <h1>{formTitle}</h1>
@@ -120,11 +129,11 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                 </DialogHeader>
                 <form onSubmit={submit} className="text-base">
                     <div className="space-y-3">
-                        <div className="xl:flex xl:space-x-10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormComponent
                                 name="band_purchase_code"
                                 fieldType={FormFieldType.INPUT}
-                                label="Purchase Code"
+                                label={t("bird_form_bandpurchase_purchaseCode")}
                                 placeholder=""
                                 value={data.band_purchase_code}
                                 onChange={(e) => setData("band_purchase_code", e.target.value)}
@@ -133,18 +142,16 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                             <FormComponent
                                 name="band_purchase_date"
                                 fieldType={FormFieldType.DATE_PICKER}
-                                label="Date"
+                                label={t("bird_form_bandpurchase_date")}
                                 placeholder=""
                                 value={data.band_purchase_date}
                                 onChange={(e) => setData("band_purchase_date", e.target.value)}
                                 error={errorMessage == "band_purchase_date is required" ? errorMessage : errors.band_purchase_date}
                             />
-                        </div>
-                        <div className="xl:flex xl:space-x-10">
                             <FormComponent
                                 name="band_purchase_band_code"
                                 fieldType={FormFieldType.INPUT}
-                                label="Band Code"
+                                label={t("bird_form_bandpurchase_bandCode")}
                                 placeholder=""
                                 value={data.band_purchase_band_code}
                                 onChange={(e) => setData("band_purchase_band_code", e.target.value)}
@@ -153,18 +160,16 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                             <FormComponent
                                 name="band_purchase_description"
                                 fieldType={FormFieldType.INPUT}
-                                label="Description"
+                                label={t("bird_form_bandpurchase_description")}
                                 placeholder=""
                                 value={data.band_purchase_description}
                                 onChange={(e) => setData("band_purchase_description", e.target.value)}
                                 error={errorMessage == "band_purchase_description is required" ? errorMessage : errors.band_purchase_description}
                             />
-                        </div>
-                        <div className="xl:flex xl:space-x-10">
                             <FormComponent
                                 name="band_purchase_unit_price"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Prix Unitaire (CFA)"
+                                label={t("bird_form_bandpurchase_unitPrice")}
                                 placeholder=""
                                 value={data.band_purchase_unit_price}
                                 onChange={(e) => setData("band_purchase_unit_price", e.target.value)}
@@ -173,18 +178,16 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                             <FormComponent
                                 name="band_purchase_quantity"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Quantite"
+                                label={t("bird_form_bandpurchase_quantity")}
                                 placeholder=""
                                 value={data.band_purchase_quantity}
                                 onChange={(e) => setData("band_purchase_quantity", e.target.value)}
                                 error={errorMessage == "band_purchase_quantity is required" ? errorMessage : errors.band_purchase_quantity}
                             />
-                        </div>
-                        <div className="xl:flex xl:space-x-10">
                             <FormComponent
                                 name="band_purchase_reduction"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Reduction (CFA)"
+                                label={t("bird_form_bandpurchase_reduction")}
                                 placeholder=""
                                 value={data.band_purchase_reduction}
                                 onChange={(e) => setData("band_purchase_reduction", e.target.value)}
@@ -193,7 +196,7 @@ const BandPurchaseForm = ({ showDlg, toggleDlg, title, selectedData }: BandPurch
                             <FormComponent
                                 name="band_purchase_total_cost"
                                 fieldType={FormFieldType.NUMBER}
-                                label="Total Cost"
+                                label={t("bird_form_bandpurchase_totalPrice")}
                                 placeholder=""
                                 value={data.band_purchase_total_cost = (Number(data.band_purchase_unit_price) * Number(data.band_purchase_quantity) - Number(data.band_purchase_reduction)).toString()}
                                 onChange={(e) => setData("band_purchase_total_cost", e.target.value)}

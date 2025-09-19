@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/components/ui/button";
 import { PencilOff, Trash2 } from 'lucide-react';
 import { useTranslation } from "react-i18next";
 import DeleteDialog from '../dialog/DeleteDialog';

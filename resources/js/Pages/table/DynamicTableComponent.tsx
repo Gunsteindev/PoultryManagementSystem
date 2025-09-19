@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Pencil, Trash2, Printer, ArrowUp, ArrowDown, MoreHorizontalIcon } from 'lucide-react';
 import { useTranslation } from "react-i18next";
 
@@ -20,10 +20,12 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
     const [itemsPerPage] = useState(8);
     const [filterText, setFilterText] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+    const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null);
 
     const { t, i18n } = useTranslation();
 
     const totalPages = Math.ceil(data.length / itemsPerPage);
+    const wrapperRef = useRef<HTMLDivElement>(null);
 
     const handlePreviousPage = () => {
         if (currentPage > 1) {
@@ -65,7 +67,7 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
     const currentData = sortedData.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <div className="overflow-x-auto h-full">
+        <div className="overflow-hidden">
             {/* Filter Input */}
             <div className="mb-4">
                 <input
@@ -76,14 +78,14 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                     className="w-[25%] px-4 py-2 border-none  rounded-md focus:outline-none dark:bg-slate-800"
                 />
             </div>
-            <table className="min-w-full  bg-white rounded-lg dark:bg-slate-800">
+            <table className="min-w-full h-full bg-white rounded-lg dark:bg-slate-800 mb-20">
                 <thead className="bg-gray-100 dark:bg-slate-800">
                     <tr>
                         {columns.map((column, index) => (
                             <th
                                 key={index}
                                 onClick={() => handleSort(column.accessor)}
-                                className="px-4 py-2 text-left text-lg font-bold"
+                                className="px-4 py-2 text-left text-sm font-bold"
                             >
                                 <span className='flex items-center cursor-pointer'>
                                 {column.header}
@@ -94,7 +96,7 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                                 
                             </th>
                         ))}
-                        <th className="px-4 py-2 flex justify-center text-left text-lg font-bold">
+                        <th className="px-4 py-2 flex justify-center text-left text-sm font-bold">
                             Actions
                         </th>
                     </tr>
@@ -113,66 +115,41 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
                                     {row[column.accessor]}
                                 </td>
                             ))}
-                            <td className="px-4 py-2 text-sm flex justify-center">
-                                {/* Popover for Actions */}
-                                <div className="relative">
-                                    <button
-                                        onClick={(e) => {
-                                        e.stopPropagation(); // Prevent event bubbling
-                                        const popover = document.getElementById(`popover-${rowIndex}`);
-                                        if (popover) {
-                                            popover.classList.toggle('hidden'); // Toggle visibility
-                                        }
-                                        }}
-                                        className=""
-                                    >
-                                        <MoreHorizontalIcon size={22} />
-                                    </button>
-                                    <div
-                                        id={`popover-${rowIndex}`}
-                                        className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 hidden"
-                                    >
+                            <td className="px-4 py-2 text-sm text-center relative">
+                                <button onClick={() => setOpenPopoverIndex(openPopoverIndex === rowIndex ? null : rowIndex)}>
+                                    <MoreHorizontalIcon size={20} />
+                                </button>
+                                {openPopoverIndex === rowIndex && (
+                                    <div className="absolute z-10 right-0 mt-2 w-40 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-md shadow-lg">
                                         <button
                                             onClick={() => {
                                                 onUpdate(row);
-                                                const popover = document.getElementById(`popover-${rowIndex}`);
-                                                if (popover) {
-                                                    popover.classList.add('hidden'); // Hide popover
-                                                }
+                                                setOpenPopoverIndex(null);
                                             }}
-                                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                            className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-slate-600"
                                         >
-                                            <Pencil size={18} className="inline mr-2" />
-                                            {t("action_btn_update")}
+                                            <Pencil size={16} className="inline mr-2" /> {t('action_btn_update')}
                                         </button>
                                         <button
                                             onClick={() => {
                                                 onDelete(row);
-                                                const popover = document.getElementById(`popover-${rowIndex}`);
-                                                if (popover) {
-                                                    popover.classList.add('hidden'); // Hide popover
-                                                }
+                                                setOpenPopoverIndex(null);
                                             }}
-                                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                            className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-slate-600"
                                         >
-                                            <Trash2 size={18} className="inline mr-2" />
-                                            {t("action_btn_delete")}
+                                            <Trash2 size={16} className="inline mr-2" /> {t('action_btn_delete')}
                                         </button>
                                         <button
                                             onClick={() => {
                                                 console.log('Print', row);
-                                                const popover = document.getElementById(`popover-${rowIndex}`);
-                                                if (popover) {
-                                                    popover.classList.add('hidden'); // Hide popover
-                                                }
+                                                setOpenPopoverIndex(null);
                                             }}
-                                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                            className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-slate-600"
                                         >
-                                            <Printer size={18} className="inline mr-2" />
-                                            {t("action_btn_print")}
+                                            <Printer size={16} className="inline mr-2" /> {t('action_btn_print')}
                                         </button>
                                     </div>
-                                </div>
+                                )}
                             </td>
                         </tr>
                     ))}
@@ -209,3 +186,4 @@ const DynamicTableComponent: React.FC<DynamicTableProps> = ({ columns, data, onU
 };
 
 export default DynamicTableComponent;
+

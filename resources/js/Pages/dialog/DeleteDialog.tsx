@@ -7,10 +7,10 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "@/Components/components/ui/alert-dialog";
 import { TriangleAlert } from "lucide-react";
-import { Separator } from "@/Components/ui/separator";
-import { useToast } from '@/Components/hooks/use-toast';
+import { Separator } from "@/Components/components/ui/separator";
+import { useToast } from '@/Components/components/hooks/use-toast';
 import { useClientStore } from "@/lib/Stores/customerStore";
 import { useSupplierStore } from "@/lib/Stores/supplierStore";
 import { useFoodStore } from "@/lib/Stores/foodStore";
@@ -23,6 +23,7 @@ import { useBirdSaleStore } from "@/lib/Stores/birdSaleStore";
 import { useEggSaleStore } from "@/lib/Stores/eggSaleStore";
 import { usePickupStore } from "@/lib/Stores/pickupStore";
 import { useBirdLossStore } from "@/lib/Stores/BirdLossStore";
+import { useUserStore } from "@/lib/Stores/UserStore";
 
 
 interface DeleteDialogProps {
@@ -48,6 +49,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({  deleteDlg, toggleDeleteDlg
     const { deleteEggSale } = useEggSaleStore();
     const { deletePickup } = usePickupStore();
     const { deleteBirdLoss } = useBirdLossStore()
+    const { users } = useUserStore();
 
 
     const handleDelete = async () => {
@@ -98,6 +100,10 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({  deleteDlg, toggleDeleteDlg
                 return toast({ description: `${deletedDataHeader} deleted successfully.` });
 
             case "birdloss":
+                await deleteBirdLoss(deletedID as number);
+                return toast({ description: `${deletedDataHeader} deleted successfully.` });
+
+            case "users":
                 await deleteBirdLoss(deletedID as number);
                 return toast({ description: `${deletedDataHeader} deleted successfully.` });
 

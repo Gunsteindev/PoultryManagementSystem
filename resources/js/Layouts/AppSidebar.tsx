@@ -7,9 +7,9 @@ import {
     SidebarGroupLabel,
     SidebarGroupContent,
     SidebarMenu,
-} from "@/Components/ui/sidebar"
+} from "@/Components/components/ui/sidebar"
 import { Link, usePage } from "@inertiajs/react";
-import { BriefcaseMedical, Bird, Egg, UsersRound, Blocks, LayoutDashboard, Settings } from 'lucide-react'
+import { BriefcaseMedical, Bird, Egg, Blocks, LayoutDashboard, Settings } from 'lucide-react'
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -29,8 +29,8 @@ const AppSidebar = () => {
         <Sidebar className="h-full">
             <SidebarContent className="dark:bg-slate-800 bg-white">
                 <SidebarGroup>
-                    <SidebarGroupLabel className="mb-10 px-3">
-                        <h1 className="text-2xl font-bold text-orange-600">Logo</h1>
+                    <SidebarGroupLabel className="mb-10 py-8">
+                        <img src="/transparent_logo.png" alt="PMS Logo" className="w-20 h-auto" />
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
@@ -48,18 +48,15 @@ const AppSidebar = () => {
                                         <Link className="hover:bg-orange-50 dark:hover:bg-slate-900 p-2 rounded-lg flex space-x-5 items-center cursor-pointer nav-link" href="/Consomation/index"><Blocks className="text-orange-600"  size={20} /><h1 className='text-base font-semibold'>{t("food")}</h1></Link>
                                         <Link className="hover:bg-orange-50 dark:hover:bg-slate-900 p-2 rounded-lg flex space-x-5 items-center cursor-pointer nav-link" href="/Admin/index"><Settings className="text-orange-600"  size={20} /><h1 className='text-base font-semibold'>{t("admin")}</h1></Link>
                                     </>
-                                )}
-                                
+                                )}  
                             </nav>
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
-                
             </SidebarContent>
             <SidebarFooter className="px-4 dark:bg-slate-800 bg-white"> 
-                <div className="flex items-center space-x-5">
-                    <div><UsersRound className="text-orange-600" size={20}/></div>
-                    <div>{roles}</div>
+                <div className="text-sm text-gray-500 py-2">
+                    <h1>© {new Date().getFullYear()} Gunstein.dev</h1>
                 </div>
             </SidebarFooter>
         </Sidebar>

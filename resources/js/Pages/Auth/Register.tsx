@@ -3,8 +3,8 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import FormComponent, { FormFieldType } from '@/Components/ui/formComponent';
-import { SelectItem } from '@/Components/ui/select';
+import FormComponent, { FormFieldType } from '@/Components/components/ui/formComponent';
+import { SelectItem } from '@/Components/components/ui/select';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
@@ -116,17 +116,16 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    {/* <InputLabel
+                    <InputLabel
                         htmlFor="role"
                         value="Role"
                         className='dark:text-white'
-                    /> */}
+                    />
                     {/* <label htmlFor="role">Role</label> */}
 
                     <FormComponent
                         name="role"
                         fieldType={FormFieldType.SELECT}
-                        label="Role"
                         placeholder=""
                         value={data.role}
                         onChange={(e) => setData("role", e.target.value)}
